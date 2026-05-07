@@ -5,24 +5,27 @@ import TranslatorInput from "./components/TranslatorInput";
 import TranslationCard from "./components/TranslationCard";
 import BullshitMeter from "./components/BullshitMeter";
 import ExecutiveDashboard from "./components/ExecutiveDashboard";
+import {
+  translateCorporateBullshit,
+  type TranslationResult,
+} from "./lib/translate";
 
-const mockResult = {
-  original: "We need to leverage cross-functional synergies to maximize stakeholder alignment.",
-  translation: "We need more meetings because nobody knows who owns this.",
-  score: 87,
-  mode: "Cynical",
-  buzzwords: ["leverage", "cross-functional", "synergies", "stakeholder alignment"],
-};
+// const mockResult = {
+//   original: "We need to leverage cross-functional synergies to maximize stakeholder alignment.",
+//   translation: "We need more meetings because nobody knows who owns this.",
+//   score: 87,
+//   mode: "Cynical",
+//   buzzwords: ["leverage", "cross-functional", "synergies", "stakeholder alignment"],
+// };
 
 export default function Home() {
-  const [result, setResult] = useState<typeof mockResult | null>(null);
+  const [result, setResult] = useState<TranslationResult | null>(null);
 
   const handleTranslate = async (text: string) => {
-    setResult({
-      ...mockResult,
-      original: text,
-    });
-  };
+  const translationResult = translateCorporateBullshit(text);
+
+  setResult(translationResult);
+};
 
   return (
     <main className="min-h-screen overflow-hidden bg-slate-950 text-slate-100 p-6">
