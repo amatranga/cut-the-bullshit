@@ -5,6 +5,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const text = body?.text;
+    const mode = body?.mode ?? 'cynical';
 
     if (typeof text !== "string" || !text.trim()) {
       return NextResponse.json(
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = translateCorporateBullshit(text);
+    const result = translateCorporateBullshit(text, mode);
 
     return NextResponse.json(result);
   } catch {

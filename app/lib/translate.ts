@@ -1,14 +1,15 @@
 import { CORPORATE_JARGON } from "./jargon";
+import { TranslationMode } from "./types";
 
 export type TranslationResult = {
   original: string;
   translation: string;
   score: number;
-  mode: string;
+  mode: TranslationMode;
   buzzwords: string[];
 };
 
-export function translateCorporateBullshit(text: string): TranslationResult {
+export function translateCorporateBullshit(text: string, mode: TranslationMode = 'cynical'): TranslationResult {
   const lowerText = text.toLowerCase();
 
   const buzzwords = CORPORATE_JARGON.filter(word =>
@@ -19,42 +20,26 @@ export function translateCorporateBullshit(text: string): TranslationResult {
 
   return {
     original: text,
-    translation: getMockTranslation(text, buzzwords),
+    translation: getMockTranslation(text, buzzwords, mode),
     score,
-    mode: "Cynical",
+    mode,
     buzzwords,
   };
 }
 
-function getMockTranslation(text: string, buzzwords: string[]) {
-  if (buzzwords.length === 0) {
-    return "This is surprisingly readable. Legal has been notified.";
-  }
+function getMockTranslation(text: string, buzzwords: string[], mode: TranslationMode) {
+  switch (mode) {
+    case "direct":
+      return "Nobody agrees on ownership yet.";
 
-  if (
-    buzzwords.includes("alignment") ||
-    buzzwords.includes("stakeholder") ||
-    buzzwords.includes("stakeholders")
-  ) {
-    return "Nobody agrees yet, so this is going to become a meeting.";
-  }
+    case "executive":
+      return "Cross-functional alignment remains unresolved across stakeholder groups.";
 
-  if (
-    buzzwords.includes("optimize") ||
-    buzzwords.includes("optimization") ||
-    buzzwords.includes("efficiency") ||
-    buzzwords.includes("streamline")
-  ) {
-    return "Someone wants this done faster, probably with fewer people.";
-  }
+    case "gen-z":
+      return "bro this meeting could've been a slack message 💀";
 
-  if (
-    buzzwords.includes("strategic") ||
-    buzzwords.includes("initiative") ||
-    buzzwords.includes("transformation")
-  ) {
-    return "Leadership wants this to sound important before they know what it means.";
+    case "cynical":
+    default:
+      return "Nobody agrees yet, so this is going to become a meeting.";
   }
-
-  return "This probably means more work, less clarity, and a follow-up meeting.";
 }
