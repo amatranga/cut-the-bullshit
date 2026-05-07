@@ -1,10 +1,4 @@
-type TranslationResult = {
-  original: string;
-  translation: string;
-  score: number;
-  mode: string;
-  buzzwords: string[];
-};
+import { TranslationMode, TranslationResult } from "@/app/lib/types";
 
 type TranslationCardProps = {
   result: TranslationResult;
@@ -13,6 +7,24 @@ type TranslationCardProps = {
 export default function TranslationCard({
   result,
 }: TranslationCardProps) {
+
+  function formatModeLabel(mode: TranslationMode) {
+    switch (mode) {
+      case "direct":
+        return "Direct Mode";
+
+      case "executive":
+        return "Executive Decoder";
+
+      case "gen-z":
+        return "Gen Z Mode";
+
+      case "cynical":
+      default:
+        return "Cynical Mode";
+    }
+  }
+
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur p-5 shadow-2xl">
       <div className="flex items-start justify-between mb-6">
@@ -27,7 +39,8 @@ export default function TranslationCard({
         </div>
 
         <div className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-sm text-cyan-300">
-          {result.mode} Mode
+          {/* {result.mode} Mode */}
+          {formatModeLabel(result.mode)}
         </div>
       </div>
 

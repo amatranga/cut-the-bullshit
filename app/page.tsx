@@ -5,17 +5,16 @@ import TranslatorInput from "@/app/components/TranslatorInput";
 import TranslationCard from "@/app/components/TranslationCard";
 import BullshitMeter from "@/app/components/BullshitMeter";
 import ExecutiveDashboard from "@/app/components/ExecutiveDashboard";
-import {
-  translateCorporateBullshit,
-  type TranslationResult,
-} from "@/app/lib/translate";
+import EmptyState from "@/app/components/EmptyState";
+import type { TranslationResult } from "@/app/lib/translate";
+import { TranslationMode } from "@/app/lib/types";
 
 export default function Home() {
   const [result, setResult] = useState<TranslationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleTranslate = async (text: string) => {
+  const handleTranslate = async (text: string, mode: TranslationMode) => {
     setIsLoading(true);
     setError(null);
 
@@ -25,7 +24,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text, mode }),
       });
 
       if (!response.ok) {
@@ -67,8 +66,15 @@ export default function Home() {
           <TranslatorInput onTranslate={handleTranslate} isLoading={isLoading} />
 
           <aside className="space-y-6 self-start border-l border-slate-800/60 pl-6">
-            <BullshitMeter score={result?.score ?? 0} />
-            {result && <TranslationCard result={result} />}
+            {result ? (
+              <>
+                <BullshitMeter score={result?.score ?? 0} />
+                <TranslationCard result={result} />
+              </>
+            ) : (
+              <EmptyState />
+            )
+            }
           </aside>
         </div>
       </div>

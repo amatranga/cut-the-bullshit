@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react";
+import { TranslationMode } from "@/app/lib/types";
 
 type TranslatorInputProps = {
-  onTranslate: (text: string) => void | Promise<void>;
+  onTranslate: (text: string, mode: TranslationMode) => void | Promise<void>;
   isLoading?: boolean;
 };
 
@@ -12,6 +13,7 @@ export default function TranslatorInput({
   isLoading,
 }: TranslatorInputProps) {
   const [text, setText] = useState("");
+  const [mode, setMode] = useState('cynical');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,7 +22,7 @@ export default function TranslatorInput({
 
     if (!trimmedText) return;
 
-    await onTranslate(trimmedText);
+    await onTranslate(trimmedText, mode as TranslationMode);
   };
 
   return (
@@ -54,6 +56,17 @@ export default function TranslatorInput({
         <p className="text-xs text-slate-500">
           Powered by proprietary executive ambiguity detection.
         </p>
+
+        <select
+          value={mode}
+          onChange={event => setMode(event.target.value as TranslationMode)}
+          className="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100"
+        >
+          <option value="cynical">Cynical</option>
+          <option value="direct">Direct</option>
+          <option value="executive">Executive Decoder</option>
+          <option value="gen-z">Gen Z</option>
+        </select>
 
         <button
           type="submit"
