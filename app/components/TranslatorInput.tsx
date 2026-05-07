@@ -4,10 +4,12 @@ import { useState } from "react";
 
 type TranslatorInputProps = {
   onTranslate: (text: string) => void | Promise<void>;
+  isLoading?: boolean;
 };
 
 export default function TranslatorInput({
   onTranslate,
+  isLoading,
 }: TranslatorInputProps) {
   const [text, setText] = useState("");
 
@@ -58,7 +60,7 @@ export default function TranslatorInput({
           disabled={!text.trim()}
           className="rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-500"
         >
-          Translate Bullshit
+          {isLoading ? "Aligning Stakeholders..." : "Translate Bullshit"}
         </button>
       </div>
     </form>
