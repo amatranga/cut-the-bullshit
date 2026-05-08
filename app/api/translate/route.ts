@@ -5,7 +5,7 @@ import type { TranslationMode } from "@/app/lib/types";
 import { getSystemPrompt } from "@/app/lib/prompt";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY + 'test',
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function POST(request: Request) {
