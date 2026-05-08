@@ -64,19 +64,22 @@ describe("translateCorporateBullshit function", () => {
     );
 
     expect(result.translation).toBe(
-      "Nobody agrees yet, so this is going to become a meeting."
+      "This probably means more work for the people not in the room."
     );
   });
 
-  it("returns direct translation", () => {
+  it("returns a direct translation", () => {
     const result = translateCorporateBullshit(
       "We need alignment.",
       "direct"
     );
 
-    expect(result.translation).toBe(
-      "Nobody agrees on ownership yet."
-    );
+    expect([
+      "Nobody agrees on ownership yet.",
+      "The decision is unresolved.",
+      "This needs clearer requirements.",
+      "The team does not have an actionable plan yet.",
+    ]).toContain(result.translation);
   });
 
   it("returns executive translation", () => {
@@ -86,7 +89,7 @@ describe("translateCorporateBullshit function", () => {
     );
 
     expect(result.translation).toBe(
-      "Cross-functional alignment remains unresolved across stakeholder groups."
+      "Decision ownership requires further clarification before execution can proceed."
     );
   });
 
@@ -96,7 +99,7 @@ describe("translateCorporateBullshit function", () => {
       "gen-z"
     );
 
-    expect(result.translation).toContain("bro");
+    expect(result.translation).toContain("zero");
   });
 
   it("returns minimum score when no buzzwords exist", () => {
@@ -107,4 +110,12 @@ describe("translateCorporateBullshit function", () => {
     expect(result.score).toBe(15);
     expect(result.buzzwords).toEqual([]);
   });
+
+  it("calculates weighted bullshit score based on detected buzzwords", () => {
+  const result = translateCorporateBullshit(
+    "We need to leverage synergy and alignment."
+  );
+
+  expect(result.score).toBe(40);
+});
 });
