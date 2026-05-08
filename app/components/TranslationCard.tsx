@@ -11,6 +11,7 @@ export default function TranslationCard({
   result,
 }: TranslationCardProps) {
   const [copied, setCopied] = useState(false);
+  const [shared, setShared] = useState(false);
 
   const formatModeLabel = (mode: TranslationMode) => {
     switch (mode) {
@@ -29,24 +30,28 @@ export default function TranslationCard({
     }
   }
 
+  const getShareText = () => (`
+    Cut the Bullshit™
+
+    Mode: ${formatModeLabel(result.mode)}
+
+    Original:
+    "${result.original}"
+
+    Translation:
+    "${result.translation}"
+
+    Detected Buzzwords:
+      ${result.buzzwords.length
+        ? result.buzzwords.join(", ")
+        : "None" }
+
+    Bullshit Density: ${result.score}%
+    `.trim()
+  );
+
   const handleCopy = async () => {
-    const shareText = `
-      Cut the Bullshit™
-
-      Mode: ${formatModeLabel(result.mode)}
-
-      Original:
-      "${result.original}"
-
-      Translation:
-      "${result.translation}"
-
-      Detected Buzzwords:
-      ${result.buzzwords.join(", ")}
-
-      Bullshit Density: ${result.score}%
-    `.trim();
-
+    const shareText = getShareText();
     await navigator.clipboard.writeText(shareText);
 
     setCopied(true);
@@ -55,6 +60,31 @@ export default function TranslationCard({
       setCopied(false);
     }, 2000);
   };
+
+  const handleShare = async () => {
+    const shareText = getShareText();
+
+    if (!navigator.share) {
+      console.log('navigator.share not a function');
+      await handleCopy();
+      return;
+    }
+
+    try {
+      await navigator.share({
+        title: 'Cut the Bullshit',
+        text: shareText,
+      });
+
+      setShared(true);
+
+      setTimeout(() => {
+        setShared(false);
+      }, 2000)
+    } catch {
+      setShared(false);
+    }
+  }
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur p-5 shadow-2xl">
@@ -75,6 +105,14 @@ export default function TranslationCard({
               className="rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700"
             >
               {copied ? "Copied!" : "Copy"}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleShare}
+              className="rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700"
+            >
+              {shared ? "Shared!" : "Share"}
             </button>
           </div>
         </div>
