@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { translateCorporateBullshit } from "../translate";
 
-describe("translateCorporateBullshit", () => {
+describe("translateCorporateBullshit function", () => {
   it("returns the original text", () => {
     const result = translateCorporateBullshit(
       "We need stakeholder alignment."
