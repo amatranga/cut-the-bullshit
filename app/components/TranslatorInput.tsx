@@ -65,7 +65,7 @@ export default function TranslatorInput({
           <option value="cynical">Cynical</option>
           <option value="direct">Direct</option>
           <option value="executive">Executive Decoder</option>
-          <option value="gen-z">Gen Z</option>
+          <option value="slack-goblin">Slack Goblin</option>
         </select>
 
         <button

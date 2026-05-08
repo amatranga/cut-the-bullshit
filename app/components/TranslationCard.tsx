@@ -16,8 +16,8 @@ export default function TranslationCard({
       case "executive":
         return "Executive Decoder";
 
-      case "gen-z":
-        return "Gen Z Mode";
+      case "slack-goblin":
+        return "Slack Goblin Mode";
 
       case "cynical":
       default:

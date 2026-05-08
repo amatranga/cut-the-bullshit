@@ -23,7 +23,7 @@ export function translateCorporateBullshit(text: string, mode: TranslationMode =
 
   return {
     original: text,
-    translation: getMockTranslation(text, buzzwords, mode),
+    translation: getMockTranslation(text, mode),
     score,
     mode,
     buzzwords,
@@ -32,7 +32,6 @@ export function translateCorporateBullshit(text: string, mode: TranslationMode =
 
 function getMockTranslation(
   text: string,
-  buzzwords: string[],
   mode: TranslationMode
 ) {
   const translations = TRANSLATIONS_BY_MODE[mode];
@@ -83,7 +82,7 @@ const TRANSLATIONS_BY_MODE: Record<TranslationMode, string[]> = {
     "The organization should establish clearer accountability and success criteria.",
     "Strategic direction exists, but operational details remain underdefined.",
   ],
-  "gen-z": [
+  "slack-goblin": [
     "bro this meeting could've been a slack message 💀",
     "they really said a lot of words and zero decisions",
     "bestie, nobody knows who owns this",
