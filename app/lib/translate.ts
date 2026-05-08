@@ -2,15 +2,7 @@ import {
   CORPORATE_JARGON,
   CORPORATE_JARGON_WEIGHTS,
 } from "./jargon";
-import { TranslationMode } from "./types";
-
-export type TranslationResult = {
-  original: string;
-  translation: string;
-  score: number;
-  mode: TranslationMode;
-  buzzwords: string[];
-};
+import { TranslationMode, TranslationResult } from "./types";
 
 export function translateCorporateBullshit(text: string, mode: TranslationMode = 'cynical'): TranslationResult {
   const lowerText = text.toLowerCase();
@@ -23,18 +15,18 @@ export function translateCorporateBullshit(text: string, mode: TranslationMode =
 
   return {
     original: text,
-    translation: getMockTranslation(text, mode),
+    translation: getFallbackTranslation(text, mode),
     score,
     mode,
     buzzwords,
   };
 }
 
-function getMockTranslation(
+function getFallbackTranslation(
   text: string,
   mode: TranslationMode
 ) {
-  const translations = TRANSLATIONS_BY_MODE[mode];
+  const translations = FALLBACK_TRANSLATIONS_BY_MODE[mode];
   const index = getDeterministicIndex(text, translations.length);
 
   return translations[index];
@@ -63,7 +55,7 @@ function calculateBullshitScore(buzzwords: string[]) {
   return Math.min(100, Math.max(10, weightedScore));
 }
 
-const TRANSLATIONS_BY_MODE: Record<TranslationMode, string[]> = {
+const FALLBACK_TRANSLATIONS_BY_MODE: Record<TranslationMode, string[]> = {
   direct: [
     "Nobody agrees on ownership yet.",
     "The decision is unresolved.",
@@ -83,9 +75,10 @@ const TRANSLATIONS_BY_MODE: Record<TranslationMode, string[]> = {
     "Strategic direction exists, but operational details remain underdefined.",
   ],
   "slack-goblin": [
-    "bro this meeting could've been a slack message 💀",
-    "they really said a lot of words and zero decisions",
-    "bestie, nobody knows who owns this",
-    "corporate said ✨vibes-based planning✨",
+    "bro this is just decision avoidance 💀",
+    "committee warfare has entered the chat",
+    "many stakeholders, zero owners",
+    "alignment theater goes crazy",
+    "this meeting could’ve been accountability",
   ],
 };

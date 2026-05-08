@@ -10,4 +10,5 @@ export type TranslationResult = {
   score: number;
   mode: TranslationMode;
   buzzwords: string[];
+  fallbackUsed?: boolean;
 };

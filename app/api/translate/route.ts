@@ -5,7 +5,7 @@ import type { TranslationMode } from "@/app/lib/types";
 import { getSystemPrompt } from "@/app/lib/prompt";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY + 'test',
 });
 
 export async function POST(request: Request) {
@@ -27,18 +27,33 @@ export async function POST(request: Request) {
       mode as TranslationMode
     );
 
-    const aiTranslation = await generateAiTranslation(
-      text,
-      mode as TranslationMode
-    );
+    try {
+      const aiTranslation = await generateAiTranslation(
+        text,
+        mode as TranslationMode
+      );
 
-    return NextResponse.json({
-      ...localResult,
-      translation: aiTranslation,
-    });
+      if (!aiTranslation) {
+        return NextResponse.json({
+          ...localResult,
+          fallbackUsed: true,
+        });
+      }
+
+      return NextResponse.json({
+        ...localResult,
+        translation: aiTranslation,
+        fallbackUsed: false,
+      });
+    } catch {
+      return NextResponse.json({
+        ...localResult,
+        fallbackUsed: true,
+      });
+    }
   } catch {
     return NextResponse.json(
-      { error: "Failed to translate corporate bullshit." },
+      { error: "Failed to process translation request." },
       { status: 500 }
     );
   }
