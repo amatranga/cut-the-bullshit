@@ -8,7 +8,7 @@ export default function BullshitMeter({
   const getStatus = () => {
     if (score < 30) {
       return {
-        label: "Actionable Communication",
+        label: "Readable",
         color: "bg-green-500",
         text: "text-green-300",
       };
@@ -16,14 +16,14 @@ export default function BullshitMeter({
 
     if (score < 70) {
       return {
-        label: "Moderate Abstraction Detected",
+        label: "Corporate",
         color: "bg-yellow-500",
         text: "text-yellow-300",
       };
     }
 
     return {
-      label: "Critical Bullshit Event",
+      label: "Critical Bullshit",
       color: "bg-red-500",
       text: "text-red-300",
     };
@@ -33,21 +33,21 @@ export default function BullshitMeter({
 
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur p-6 shadow-2xl">
-      <div className="flex items-start justify-between mb-6">
-        <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-cyan-400">
-            Linguistic Analysis Engine
-          </p>
+      <div className="mb-6 space-y-3">
+        <p className="text-xs uppercase tracking-[0.25em] text-cyan-400">
+          Linguistic Analysis Engine
+        </p>
 
-          <h2 className="text-2xl font-semibold mt-2">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-2xl font-semibold">
             Bullshit Density Meter
           </h2>
-        </div>
 
-        <div
-          className={`rounded-full px-3 py-1 text-sm border border-white/10 ${status.text} bg-white/5`}
-        >
-          {status.label}
+          <div
+            className={`shrink-0 rounded-full px-3 py-1 text-xs border border-white/10 ${status.text} bg-white/5`}
+          >
+            {status.label}
+          </div>
         </div>
       </div>
 
