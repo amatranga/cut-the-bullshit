@@ -1,31 +1,45 @@
 "use client";
 
 import { useState } from "react";
-import TranslatorInput from "./components/TranslatorInput";
-import TranslationCard from "./components/TranslationCard";
-import BullshitMeter from "./components/BullshitMeter";
-import ExecutiveDashboard from "./components/ExecutiveDashboard";
-import {
-  translateCorporateBullshit,
-  type TranslationResult,
-} from "./lib/translate";
-
-// const mockResult = {
-//   original: "We need to leverage cross-functional synergies to maximize stakeholder alignment.",
-//   translation: "We need more meetings because nobody knows who owns this.",
-//   score: 87,
-//   mode: "Cynical",
-//   buzzwords: ["leverage", "cross-functional", "synergies", "stakeholder alignment"],
-// };
+import TranslatorInput from "@/app/components/TranslatorInput";
+import TranslationCard from "@/app/components/TranslationCard";
+import BullshitMeter from "@/app/components/BullshitMeter";
+import ExecutiveDashboard from "@/app/components/ExecutiveDashboard";
+import EmptyState from "@/app/components/EmptyState";
+import type { TranslationResult } from "@/app/lib/translate";
+import { TranslationMode } from "@/app/lib/types";
 
 export default function Home() {
   const [result, setResult] = useState<TranslationResult | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleTranslate = async (text: string) => {
-  const translationResult = translateCorporateBullshit(text);
+  const handleTranslate = async (text: string, mode: TranslationMode) => {
+    setIsLoading(true);
+    setError(null);
 
-  setResult(translationResult);
-};
+    try {
+      const response = await fetch("/api/translate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text, mode }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Translation request failed.");
+      }
+
+      const translationResult = await response.json();
+
+      setResult(translationResult);
+    } catch {
+      setError("The executive ambiguity engine failed to align on outcomes.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="min-h-screen overflow-hidden bg-slate-950 text-slate-100 p-6">
@@ -42,12 +56,25 @@ export default function Home() {
 
         <ExecutiveDashboard result={result} />
 
+        {error && (
+          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-200">
+            {error}
+          </div>
+        )}
+
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_520px]">
-          <TranslatorInput onTranslate={handleTranslate} />
+          <TranslatorInput onTranslate={handleTranslate} isLoading={isLoading} />
 
           <aside className="space-y-6 self-start border-l border-slate-800/60 pl-6">
-            <BullshitMeter score={result?.score ?? 0} />
-            {result && <TranslationCard result={result} />}
+            {result ? (
+              <>
+                <BullshitMeter score={result?.score ?? 0} />
+                <TranslationCard result={result} />
+              </>
+            ) : (
+              <EmptyState />
+            )
+            }
           </aside>
         </div>
       </div>
