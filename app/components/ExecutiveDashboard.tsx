@@ -1,10 +1,4 @@
-type TranslationResult = {
-  original: string;
-  translation: string;
-  score: number;
-  mode: string;
-  buzzwords: string[];
-};
+import { TranslationResult } from "../lib/types";
 
 type ExecutiveDashboardProps = {
   result: TranslationResult | null;

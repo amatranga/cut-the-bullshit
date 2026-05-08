@@ -2,7 +2,7 @@ export type TranslationMode =
   | "direct"
   | "cynical"
   | "executive"
-  | "gen-z";
+  | "slack-goblin";
 
 export type TranslationResult = {
   original: string;
@@ -10,4 +10,5 @@ export type TranslationResult = {
   score: number;
   mode: TranslationMode;
   buzzwords: string[];
+  fallbackUsed?: boolean;
 };

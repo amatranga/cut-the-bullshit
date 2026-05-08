@@ -31,7 +31,7 @@ describe("translateCorporateBullshit function", () => {
       "leverage synergies alignment"
     );
 
-    expect(result.score).toBe(69);
+    expect(result.score).toBe(40);
   });
 
   it("caps the bullshit score at 100", () => {
@@ -93,10 +93,10 @@ describe("translateCorporateBullshit function", () => {
     );
   });
 
-  it("returns gen-z translation", () => {
+  it("returns slack-goblin translation", () => {
     const result = translateCorporateBullshit(
       "We need alignment.",
-      "gen-z"
+      "slack-goblin"
     );
 
     expect(result.translation).toContain("zero");
@@ -107,7 +107,7 @@ describe("translateCorporateBullshit function", () => {
       "what up dawg"
     );
 
-    expect(result.score).toBe(15);
+    expect(result.score).toBe(10);
     expect(result.buzzwords).toEqual([]);
   });
 
