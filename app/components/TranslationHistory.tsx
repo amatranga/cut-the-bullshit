@@ -8,7 +8,7 @@ type TranslationHistoryProps = {
   onSelect: (item: TranslationHistoryItem) => void;
 };
 
-export const TranslationHistory = ({
+const TranslationHistory = ({
   hist,
   onSelect,
 }: TranslationHistoryProps) => {
@@ -39,7 +39,7 @@ export const TranslationHistory = ({
       </button>
 
       {isOpen && (
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 max-h-[320px] space-y-2 overflow-y-auto pr-1">
           {hist.map(item => (
             <button
               key={item.id}
@@ -47,17 +47,21 @@ export const TranslationHistory = ({
               onClick={() => onSelect(item)}
               className="w-full rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-left transition hover:border-cyan-500/50"
             >
-              <div className="flex items-center justify-between gap-3">
-                <p className="truncate text-sm font-medium text-slate-100">
-                  {item.original}
-                </p>
-
-                <span className="shrink-0 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-xs text-cyan-300">
+              <div className="flex items-center justify-between gap-2">
+                <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-cyan-300">
                   {item.appMode === "rewrite" ? "Rewrite" : "Decode"}
+                </span>
+
+                <span className="text-[10px] text-slate-600">
+                  {new Date(item.createdAt).toLocaleDateString()}
                 </span>
               </div>
 
-              <p className="mt-2 line-clamp-2 text-sm text-slate-400">
+              <p className="mt-2 line-clamp-1 text-sm font-medium text-slate-100">
+                {item.original}
+              </p>
+
+              <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-400">
                 {item.translation}
               </p>
             </button>
@@ -67,3 +71,5 @@ export const TranslationHistory = ({
     </section>
   );
 }
+
+export { TranslationHistory };

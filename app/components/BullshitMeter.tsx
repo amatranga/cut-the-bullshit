@@ -5,7 +5,7 @@ type BullshitMeterProps = {
   appMode: AppMode;
 };
 
-export const BullshitMeter = ({
+const BullshitMeter = ({
   score,
   appMode,
 }: BullshitMeterProps) => {
@@ -70,7 +70,7 @@ export const BullshitMeter = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 pt-2">
+        <div className="grid grid-cols-2 gap-3 pt-2 sm:gap-4">
           <MiniMetric
             label="Synergy Saturation"
             value={`${Math.min(score + 8, 100)}%`}
@@ -101,12 +101,12 @@ type MiniMetricProps = {
   value: string;
 };
 
-function MiniMetric({
+const MiniMetric = ({
   label,
   value,
-}: MiniMetricProps) {
+}: MiniMetricProps) => {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+    <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3 sm:p-4">
       <p className="text-xs uppercase tracking-wider text-slate-500">
         {label}
       </p>
@@ -117,3 +117,5 @@ function MiniMetric({
     </div>
   );
 }
+
+export { BullshitMeter };

@@ -19,7 +19,7 @@ const translateToOptions = [
   { id: 'slack-goblin', name: 'Slack Goblin' },
 ]
 
-export const TranslatorInput = ({
+const TranslatorInput = ({
   onTranslate,
   isLoading,
   appMode,
@@ -44,7 +44,8 @@ export const TranslatorInput = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-2xl backdrop-blur"
+      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-2xl backdrop-blur sm:p-6"
+      // className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-2xl backdrop-blur"
     >
       <div className="mb-5">
         <p className="text-xs uppercase tracking-[0.25em] text-cyan-400">
@@ -72,7 +73,7 @@ export const TranslatorInput = ({
             ? "Example: We don't know who owns this yet, but someone needs to decide."
             : "Example: We need to leverage cross-functional synergies to drive alignment across key stakeholders..."
         }
-        className="h-[360px] w-full resize-none overflow-y-auto rounded-xl border border-slate-800 bg-slate-950/80 p-4 text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500"
+        className="h-[260px] sm:h-[320px] lg:h-[360px] w-full resize-none overflow-y-auto rounded-xl border border-slate-800 bg-slate-950/80 p-4 text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500"
       />
 
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -84,7 +85,7 @@ export const TranslatorInput = ({
           <select
             value={translationMode}
             onChange={event => onTranslationModeChange(event.target.value as TranslationMode)}
-            className="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100"
+            className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100 sm:w-[220px]"
           >
             {translateToOptions.map(opt => (
               <option key={opt.id} value={opt.id}>{opt.name}</option>
@@ -95,7 +96,7 @@ export const TranslatorInput = ({
         <button
           type="submit"
           disabled={!text.trim()}
-          className="rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-500"
+          className="w-full rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-500 sm:w-auto"
         >
           {isLoading
             ? isRewriteMode
@@ -109,3 +110,5 @@ export const TranslatorInput = ({
     </form>
   );
 }
+
+export { TranslatorInput };

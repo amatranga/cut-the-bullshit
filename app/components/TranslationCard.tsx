@@ -8,7 +8,7 @@ type TranslationCardProps = {
   appMode: AppMode
 };
 
-export const TranslationCard = ({
+const TranslationCard = ({
   result,
   appMode,
 }: TranslationCardProps) => {
@@ -67,7 +67,6 @@ export const TranslationCard = ({
     const shareText = getShareText();
 
     if (!navigator.share) {
-      console.log('navigator.share not a function');
       await handleCopy();
       return;
     }
@@ -104,7 +103,7 @@ export const TranslationCard = ({
             <button
               type="button"
               onClick={handleCopy}
-              className="rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700"
+              className="hidden rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700 sm:inline-flex"
             >
               {copied ? "Copied!" : "Copy"}
             </button>
@@ -112,7 +111,7 @@ export const TranslationCard = ({
             <button
               type="button"
               onClick={handleShare}
-              className="rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700"
+              className="inline-flex rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700"
             >
               {shared ? "Shared!" : "Share"}
             </button>
@@ -167,3 +166,5 @@ export const TranslationCard = ({
     </div>
   );
 }
+
+export { TranslationCard };
