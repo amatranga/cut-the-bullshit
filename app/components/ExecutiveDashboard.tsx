@@ -4,9 +4,9 @@ type ExecutiveDashboardProps = {
   result: TranslationResult | null;
 };
 
-export default function ExecutiveDashboard({
+export const ExecutiveDashboard = ({
   result,
-}: ExecutiveDashboardProps) {
+}: ExecutiveDashboardProps) => {
   const score = result?.score ?? 0;
   const buzzwordCount = result?.buzzwords.length ?? 0;
 

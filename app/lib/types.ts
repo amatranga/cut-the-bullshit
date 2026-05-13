@@ -14,3 +14,9 @@ export type TranslationResult = {
 };
 
 export type AppMode = "decode" | "rewrite"
+
+export type TranslationHistoryItem = TranslationResult & {
+  id: string;
+  appMode: AppMode;
+  createdAt: number;
+}

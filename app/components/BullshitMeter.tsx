@@ -5,10 +5,10 @@ type BullshitMeterProps = {
   appMode: AppMode;
 };
 
-export default function BullshitMeter({
+export const BullshitMeter = ({
   score,
   appMode,
-}: BullshitMeterProps) {
+}: BullshitMeterProps) => {
   const getStatus = () => {
     if (score < 30) {
       return {

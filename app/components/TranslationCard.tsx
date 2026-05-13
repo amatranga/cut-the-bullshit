@@ -8,10 +8,10 @@ type TranslationCardProps = {
   appMode: AppMode
 };
 
-export default function TranslationCard({
+export const TranslationCard = ({
   result,
   appMode,
-}: TranslationCardProps) {
+}: TranslationCardProps) => {
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState(false);
 

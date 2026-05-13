@@ -1,27 +1,43 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import TranslatorInput from "@/app/components/TranslatorInput";
-import TranslationCard from "@/app/components/TranslationCard";
-import BullshitMeter from "@/app/components/BullshitMeter";
-import ExecutiveDashboard from "@/app/components/ExecutiveDashboard";
-import EmptyState from "@/app/components/EmptyState";
+import { TranslatorInput } from "@/app/components/TranslatorInput";
+import { TranslationCard } from "@/app/components/TranslationCard";
+import { BullshitMeter } from "@/app/components/BullshitMeter";
+import { ExecutiveDashboard } from "@/app/components/ExecutiveDashboard";
+import { EmptyState } from "@/app/components/EmptyState";
 import { Header } from "@/app/components/Header";
 import { ModeToggle } from "@/app/components/ModeToggle";
 import { ErrorMessage } from "@/app/components/ErrorMessage";
-import { TranslationMode, AppMode, TranslationResult } from "@/app/lib/types";
+import { TranslationHistory } from "@/app/components/TranslationHistory";
+import {
+  TranslationMode,
+  AppMode,
+  TranslationResult,
+  TranslationHistoryItem,
+} from "@/app/lib/types";
 
 export default function Home() {
   const [result, setResult] = useState<TranslationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [appMode, setAppMode] = useState<AppMode>("decode");
+  const [history, setHistory] = useState<TranslationHistoryItem[]>([]);
+  const [inputText, setInputText] = useState("");
+  const [translationMode, setTranslationMode] = useState<TranslationMode>("cynical");
 
   useEffect(() => {
-    setResult(null);
-  }, [appMode]);
+    const storedHistory = localStorage.getItem("ctb-translation-history");
+    if (!storedHistory) return;
 
-  const handleTranslate = async (text: string, mode: TranslationMode) => {
+    try {
+      setHistory(JSON.parse(storedHistory));
+    } catch {
+      localStorage.removeItem("ctb-translation-history");
+    }
+  }, []);
+
+  const handleTranslate = async (text: string) => {
     setIsLoading(true);
     setError(null);
 
@@ -33,7 +49,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text, mode }),
+        body: JSON.stringify({ text, translationMode }),
       });
 
       if (!response.ok) {
@@ -43,11 +59,37 @@ export default function Home() {
       const translationResult = await response.json();
 
       setResult(translationResult);
+
+      const historyItem: TranslationHistoryItem = {
+        ...translationResult,
+        id: crypto.randomUUID(),
+        appMode,
+        createdAt: Date.now(),
+      };
+
+      setHistory(prevHistory => {
+        const nextHistory = [historyItem, ...prevHistory].slice(0, 10);
+        
+        localStorage.setItem(
+          "ctb-translation-history",
+          JSON.stringify(nextHistory),
+        );
+
+        return nextHistory;
+      });
     } catch {
       setError("The executive ambiguity engine failed to align on outcomes.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSelectHistoryItem = (item: TranslationHistoryItem) => {
+    console.log(item);
+    setResult(item);
+    setAppMode(item.appMode);
+    setInputText(item.original);
+    setTranslationMode(item.mode);
   };
 
   return (
@@ -62,18 +104,28 @@ export default function Home() {
         <ModeToggle appMode={appMode} onModeChange={setAppMode} />
 
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_520px]">
-          <TranslatorInput onTranslate={handleTranslate} isLoading={isLoading} appMode={appMode} />
-
-          <aside className="space-y-6 self-start border-l border-slate-800/60 pl-6">
+          <TranslatorInput
+            onTranslate={handleTranslate}
+            isLoading={isLoading}
+            appMode={appMode}
+            text={inputText}
+            onTextChange={setInputText}
+            translationMode={translationMode}
+            onTranslationModeChange={setTranslationMode}
+          />
+          <aside className="space-y-6 self-start">
             {result ? (
               <>
-                <BullshitMeter score={result?.score ?? 0} appMode={appMode} />
+                <BullshitMeter score={result.score} appMode={appMode} />
                 <TranslationCard result={result} appMode={appMode} />
               </>
             ) : (
               <EmptyState appMode={appMode} />
-            )
-            }
+            )}
+            <TranslationHistory
+              hist={history}
+              onSelect={handleSelectHistoryItem}
+            />
           </aside>
         </div>
       </div>
