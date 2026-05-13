@@ -12,3 +12,5 @@ export type TranslationResult = {
   buzzwords: string[];
   fallbackUsed?: boolean;
 };
+
+export type AppMode = "decode" | "rewrite"

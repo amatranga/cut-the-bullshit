@@ -1,25 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TranslatorInput from "@/app/components/TranslatorInput";
 import TranslationCard from "@/app/components/TranslationCard";
 import BullshitMeter from "@/app/components/BullshitMeter";
 import ExecutiveDashboard from "@/app/components/ExecutiveDashboard";
 import EmptyState from "@/app/components/EmptyState";
-import type { TranslationResult } from "@/app/lib/translate";
-import { TranslationMode } from "@/app/lib/types";
+import { Header } from "@/app/components/Header";
+import { ModeToggle } from "@/app/components/ModeToggle";
+import { ErrorMessage } from "@/app/components/ErrorMessage";
+import { TranslationMode, AppMode, TranslationResult } from "@/app/lib/types";
 
 export default function Home() {
   const [result, setResult] = useState<TranslationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [appMode, setAppMode] = useState<AppMode>("decode");
+
+  useEffect(() => {
+    setResult(null);
+  }, [appMode]);
 
   const handleTranslate = async (text: string, mode: TranslationMode) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/translate", {
+      const endpoint = appMode === "rewrite" ? "/api/rewrite" : "/api/translate";
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,35 +53,25 @@ export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden bg-slate-950 text-slate-100 p-6">
       <div className="mx-auto max-w-[1400px] space-y-6 px-2">
-        <header>
-          <p className="text-sm uppercase tracking-[0.3em] text-cyan-400">
-            Enterprise Clarity Platform
-          </p>
-          <h1 className="text-4xl font-bold">Cut the Bullshit</h1>
-          <p className="text-slate-400">
-            Translate corporate abstraction into actual human meaning.
-          </p>
-        </header>
+        <Header />
 
         <ExecutiveDashboard result={result} />
 
-        {error && (
-          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-200">
-            {error}
-          </div>
-        )}
+        {error && <ErrorMessage message={error} />}
+
+        <ModeToggle appMode={appMode} onModeChange={setAppMode} />
 
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_520px]">
-          <TranslatorInput onTranslate={handleTranslate} isLoading={isLoading} />
+          <TranslatorInput onTranslate={handleTranslate} isLoading={isLoading} appMode={appMode} />
 
           <aside className="space-y-6 self-start border-l border-slate-800/60 pl-6">
             {result ? (
               <>
-                <BullshitMeter score={result?.score ?? 0} />
-                <TranslationCard result={result} />
+                <BullshitMeter score={result?.score ?? 0} appMode={appMode} />
+                <TranslationCard result={result} appMode={appMode} />
               </>
             ) : (
-              <EmptyState />
+              <EmptyState appMode={appMode} />
             )
             }
           </aside>

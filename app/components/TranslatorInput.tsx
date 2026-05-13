@@ -1,19 +1,34 @@
 "use client"
 
-import { useState } from "react";
-import { TranslationMode } from "@/app/lib/types";
+import { useState, useEffect } from "react";
+import { AppMode, TranslationMode } from "@/app/lib/types";
 
 type TranslatorInputProps = {
   onTranslate: (text: string, mode: TranslationMode) => void | Promise<void>;
   isLoading?: boolean;
+  appMode: AppMode;
 };
+
+const translateToOptions = [
+  { id: 'cynical', name: 'Cynical' },
+  { id: 'direct', name: 'Direct' },
+  { id: 'executive', name: 'Executive Decoder' },
+  { id: 'slack-goblin', name: 'Slack Goblin' },
+]
 
 export default function TranslatorInput({
   onTranslate,
   isLoading,
+  appMode,
 }: TranslatorInputProps) {
   const [text, setText] = useState("");
   const [mode, setMode] = useState('cynical');
+
+  const isRewriteMode = appMode === "rewrite";
+
+  useEffect(() => {
+    setText("");
+  }, [appMode]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,19 +51,26 @@ export default function TranslatorInput({
         </p>
 
         <h2 className="mt-2 text-2xl font-semibold">
-          Submit Statement for Analysis
+          {isRewriteMode
+          ? "Submit Plain Statement for Executive Enhancement"
+          : "Submit Statement for Analysis"}
         </h2>
 
         <p className="mt-2 text-sm text-slate-400">
-          Paste a Slack message, leadership email, meeting note, or recruiter
-          sentence that requires executive decontamination.
+          {isRewriteMode
+          ? "Paste a normal human sentence and convert it into enterprise-grade strategic abstraction."
+          : "Paste a Slack message, leadership email, meeting note, or recruiter sentence that requires executive decontamination."}
         </p>
       </div>
 
       <textarea
         value={text}
         onChange={event => setText(event.target.value)}
-        placeholder="Example: We need to leverage cross-functional synergies to drive alignment across key stakeholders..."
+        placeholder={
+          isRewriteMode
+            ? "Example: We don't know who owns this yet, but someone needs to decide."
+            : "Example: We need to leverage cross-functional synergies to drive alignment across key stakeholders..."
+        }
         className="h-[360px] w-full resize-none overflow-y-auto rounded-xl border border-slate-800 bg-slate-950/80 p-4 text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500"
       />
 
@@ -57,23 +79,30 @@ export default function TranslatorInput({
           Powered by proprietary executive ambiguity detection.
         </p>
 
-        <select
-          value={mode}
-          onChange={event => setMode(event.target.value as TranslationMode)}
-          className="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100"
-        >
-          <option value="cynical">Cynical</option>
-          <option value="direct">Direct</option>
-          <option value="executive">Executive Decoder</option>
-          <option value="slack-goblin">Slack Goblin</option>
-        </select>
+        {!isRewriteMode && (
+          <select
+            value={mode}
+            onChange={event => setMode(event.target.value as TranslationMode)}
+            className="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100"
+          >
+            {translateToOptions.map(opt => (
+              <option key={opt.id} value={opt.id}>{opt.name}</option>
+            ))}
+          </select>
+        )}
 
         <button
           type="submit"
           disabled={!text.trim()}
           className="rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-500"
         >
-          {isLoading ? "Aligning Stakeholders..." : "Translate Bullshit"}
+          {isLoading
+            ? isRewriteMode
+              ? "Generating Executive Theater..."
+              : "Aligning Stakeholders..."
+          : isRewriteMode
+            ? "Generate Bullshit"
+            : "Translate Bullshit"}
         </button>
       </div>
     </form>

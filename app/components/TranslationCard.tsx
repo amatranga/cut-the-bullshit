@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { TranslationMode, TranslationResult } from "@/app/lib/types";
+import { AppMode, TranslationMode, TranslationResult } from "@/app/lib/types";
 
 type TranslationCardProps = {
   result: TranslationResult;
+  appMode: AppMode
 };
 
 export default function TranslationCard({
   result,
+  appMode,
 }: TranslationCardProps) {
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState(false);
@@ -95,9 +97,9 @@ export default function TranslationCard({
           </p>
 
           <div className="flex shrink-0 items-center gap-2">
-            <div className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300">
+            {appMode === "decode" && (<div className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300">
               {formatModeLabel(result.mode)}
-            </div>
+            </div>)}
 
             <button
               type="button"
@@ -125,7 +127,7 @@ export default function TranslationCard({
       <div className="space-y-4">
         <section>
           <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
-            Original Statement
+            {appMode === "decode" ? "Original Statement" : "Actual Meaning"}
           </p>
 
           <div className="rounded-xl bg-slate-950 border border-slate-800 p-3 text-sm text-slate-300 italic">
@@ -135,7 +137,7 @@ export default function TranslationCard({
 
         <section>
           <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
-            Actual Meaning
+            {appMode === "decode" ? "Actual Meaning" : "Executive Rewrite"}
           </p>
 
           <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4">
@@ -145,7 +147,7 @@ export default function TranslationCard({
           </div>
         </section>
 
-        <section>
+        {appMode === "decode" && (<section>
           <p className="text-xs uppercase tracking-widest text-slate-500 mb-3">
             Detected Buzzwords
           </p>
@@ -160,7 +162,7 @@ export default function TranslationCard({
               </span>
             ))}
           </div>
-        </section>
+        </section>)}
       </div>
     </div>
   );

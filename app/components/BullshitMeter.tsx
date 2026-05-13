@@ -1,9 +1,13 @@
+import { AppMode } from "@/app/lib/types";
+
 type BullshitMeterProps = {
   score: number;
+  appMode: AppMode;
 };
 
 export default function BullshitMeter({
   score,
+  appMode,
 }: BullshitMeterProps) {
   const getStatus = () => {
     if (score < 30) {
@@ -40,7 +44,7 @@ export default function BullshitMeter({
 
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-2xl font-semibold">
-            Bullshit Density Meter
+            {appMode === "decode" ? "Bullshit Density Meter" : "Strategic Obfuscation Index"}
           </h2>
 
           <div
