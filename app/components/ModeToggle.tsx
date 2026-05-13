@@ -5,7 +5,7 @@ type ModeToggleProps = {
   onModeChange: (mode: AppMode) => void;
 };
 
-export function ModeToggle({ appMode, onModeChange }: ModeToggleProps) {
+const ModeToggle = ({ appMode, onModeChange }: ModeToggleProps) => {
   return (
     <div className="inline-flex rounded-xl border border-slate-800 bg-slate-900/70 p-1">
       <button
@@ -34,3 +34,5 @@ export function ModeToggle({ appMode, onModeChange }: ModeToggleProps) {
     </div>
   );
 }
+
+export { ModeToggle };

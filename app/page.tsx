@@ -85,7 +85,6 @@ export default function Home() {
   };
 
   const handleSelectHistoryItem = (item: TranslationHistoryItem) => {
-    console.log(item);
     setResult(item);
     setAppMode(item.appMode);
     setInputText(item.original);
@@ -93,8 +92,8 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen overflow-hidden bg-slate-950 text-slate-100 p-6">
-      <div className="mx-auto max-w-[1400px] space-y-6 px-2">
+    <main className="min-h-screen bg-slate-950 text-slate-100 p-3 sm:p-4 lg:p-6">
+      <div className="mx-auto max-w-[1400px] space-y-4 px-2 sm:space-y-6">
         <Header />
 
         <ExecutiveDashboard result={result} />
@@ -103,7 +102,7 @@ export default function Home() {
 
         <ModeToggle appMode={appMode} onModeChange={setAppMode} />
 
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_520px]">
+        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_520px] lg:gap-6">
           <TranslatorInput
             onTranslate={handleTranslate}
             isLoading={isLoading}
@@ -113,19 +112,28 @@ export default function Home() {
             translationMode={translationMode}
             onTranslationModeChange={setTranslationMode}
           />
-          <aside className="space-y-6 self-start">
-            {result ? (
-              <>
-                <BullshitMeter score={result.score} appMode={appMode} />
-                <TranslationCard result={result} appMode={appMode} />
-              </>
-            ) : (
-              <EmptyState appMode={appMode} />
-            )}
-            <TranslationHistory
-              hist={history}
-              onSelect={handleSelectHistoryItem}
-            />
+
+          <aside className="space-y-4 self-start sm:space-y-6 lg:order-none">
+            <div className="flex flex-col gap-4 sm:gap-6">
+              {result ? (
+                <>
+                  <div className="order-2 lg:order-1">
+                    <BullshitMeter score={result.score} appMode={appMode} />
+                  </div>
+                  <div className="order-1 lg:order-2">
+                    <TranslationCard result={result} appMode={appMode} />
+                  </div>
+                </>
+              ) : (
+                <EmptyState appMode={appMode} />
+              )}
+              <div className="order-3">
+                <TranslationHistory
+                  hist={history}
+                  onSelect={handleSelectHistoryItem}
+                />
+              </div>
+            </div>
           </aside>
         </div>
       </div>
