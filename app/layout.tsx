@@ -14,7 +14,32 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Cut the Bullshit",
-  description: "Translate corporate abstraction into actual human meaning",
+  description:
+    "Decode executive nonsense into what people actually mean.",
+  openGraph: {
+    title: "Cut the Bullshit",
+    description:
+      "Decode executive nonsense into what people actually mean.",
+    url: "https://cut-the-bullshit.vercel.app",
+    siteName: "Cut the Bullshit",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Cut the Bullshit - corporate jargon translator",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cut the Bullshit",
+    description:
+      "Decode executive nonsense into what people actually mean.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
