@@ -77,7 +77,7 @@ export default function Home() {
 
         return nextHistory;
       });
-    } catch {
+    } catch (error) {
       setError("The executive ambiguity engine failed to align on outcomes.");
     } finally {
       setIsLoading(false);

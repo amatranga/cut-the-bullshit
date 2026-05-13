@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import type { TranslationResult } from "@/app/lib/types";
 import { generateRewritePrompt } from "@/app/lib/prompt";
+import { rateLimit } from "@/app/lib/rateLimit";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -21,6 +22,27 @@ export async function POST(request: Request) {
       );
     }
 
+    // Rate limiting
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const ip = forwardedFor?.split(",")[0] ?? "unknown";
+
+    const { success, reset } = await rateLimit.limit(ip);
+
+    if (!success) {
+      return NextResponse.json(
+        {
+          error: "Too much executive alignment. Please circle back shortly.",
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Reset": reset.toString(),
+          },
+        }
+      );
+    };
+
+    // Generate rewrite
     const rewrite = await generateExecutiveRewrite(text);
 
     const result: TranslationResult = {
