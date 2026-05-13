@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
-import type { TranslationMode, TranslationResult } from "@/app/lib/types";
+import type { TranslationResult } from "@/app/lib/types";
+import { generateRewritePrompt } from "@/app/lib/prompt";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -46,30 +47,7 @@ async function generateExecutiveRewrite(text: string) {
     messages: [
       {
         role: "system",
-        content: `
-You are the Executive Rewrite engine for an app called "Cut the Bullshit."
-
-Your job is to take plain, direct workplace language and rewrite it as polished corporate jargon.
-
-Rules:
-- Return only the rewritten sentence or short paragraph.
-- Do not explain your reasoning.
-- Do not mention that you are an AI.
-- Keep it under 45 words.
-- Make it sound like a polished executive memo.
-- Use corporate abstraction, but keep it believable.
-- Do not make it obscene or personally insulting.
-
-Style examples:
-Plain: "Nobody knows who owns this."
-Rewrite: "Ownership remains under active evaluation as we align cross-functional stakeholders around execution priorities."
-
-Plain: "We need to decide."
-Rewrite: "The team should align on a decision framework to support timely execution."
-
-Plain: "This project is a mess."
-Rewrite: "The initiative would benefit from additional operational clarity and stakeholder alignment."
-`,
+        content: generateRewritePrompt(),
       },
       {
         role: "user",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TranslatorInput from "@/app/components/TranslatorInput";
 import TranslationCard from "@/app/components/TranslationCard";
 import BullshitMeter from "@/app/components/BullshitMeter";
@@ -17,34 +17,38 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [appMode, setAppMode] = useState<AppMode>("decode");
 
-    const handleTranslate = async (text: string, mode: TranslationMode) => {
-      setIsLoading(true);
-      setError(null);
+  useEffect(() => {
+    setResult(null);
+  }, [appMode]);
 
-      try {
-        const endpoint = appMode === "rewrite" ? "/api/rewrite" : "/api/translate";
+  const handleTranslate = async (text: string, mode: TranslationMode) => {
+    setIsLoading(true);
+    setError(null);
 
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ text, mode }),
-        });
+    try {
+      const endpoint = appMode === "rewrite" ? "/api/rewrite" : "/api/translate";
 
-        if (!response.ok) {
-          throw new Error("Translation request failed.");
-        }
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text, mode }),
+      });
 
-        const translationResult = await response.json();
-
-        setResult(translationResult);
-      } catch {
-        setError("The executive ambiguity engine failed to align on outcomes.");
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error("Translation request failed.");
       }
-    };
+
+      const translationResult = await response.json();
+
+      setResult(translationResult);
+    } catch {
+      setError("The executive ambiguity engine failed to align on outcomes.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="min-h-screen overflow-hidden bg-slate-950 text-slate-100 p-6">
@@ -63,7 +67,7 @@ export default function Home() {
           <aside className="space-y-6 self-start border-l border-slate-800/60 pl-6">
             {result ? (
               <>
-                <BullshitMeter score={result?.score ?? 0} />
+                <BullshitMeter score={result?.score ?? 0} appMode={appMode} />
                 <TranslationCard result={result} appMode={appMode} />
               </>
             ) : (

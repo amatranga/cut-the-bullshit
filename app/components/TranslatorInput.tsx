@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppMode, TranslationMode } from "@/app/lib/types";
 
 type TranslatorInputProps = {
@@ -25,6 +25,10 @@ export default function TranslatorInput({
   const [mode, setMode] = useState('cynical');
 
   const isRewriteMode = appMode === "rewrite";
+
+  useEffect(() => {
+    setText("");
+  }, [appMode]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

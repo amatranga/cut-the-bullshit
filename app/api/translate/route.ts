@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { translateCorporateBullshit } from "@/app/lib/translate";
 import type { TranslationMode } from "@/app/lib/types";
-import { getSystemPrompt } from "@/app/lib/prompt";
+import { getTranslatePrompt } from "@/app/lib/prompt";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -68,7 +68,7 @@ async function generateAiTranslation(
     messages: [
       {
         role: "system",
-        content: getSystemPrompt(mode),
+        content: getTranslatePrompt(mode),
       },
       {
         role: "user",
