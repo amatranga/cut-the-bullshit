@@ -1,12 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react";
 import { AppMode, TranslationMode } from "@/app/lib/types";
 
 type TranslatorInputProps = {
-  onTranslate: (text: string, mode: TranslationMode) => void | Promise<void>;
+  onTranslate: (text: string) => void | Promise<void>;
   isLoading?: boolean;
   appMode: AppMode;
+  text: string;
+  onTextChange: (text: string) => void;
+  translationMode: TranslationMode;
+  onTranslationModeChange: (mode: TranslationMode) => void;
 };
 
 const translateToOptions = [
@@ -16,19 +19,17 @@ const translateToOptions = [
   { id: 'slack-goblin', name: 'Slack Goblin' },
 ]
 
-export default function TranslatorInput({
+export const TranslatorInput = ({
   onTranslate,
   isLoading,
   appMode,
-}: TranslatorInputProps) {
-  const [text, setText] = useState("");
-  const [mode, setMode] = useState('cynical');
+  text,
+  onTextChange,
+  translationMode,
+  onTranslationModeChange,
+}: TranslatorInputProps) => {
 
   const isRewriteMode = appMode === "rewrite";
-
-  useEffect(() => {
-    setText("");
-  }, [appMode]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,7 +38,7 @@ export default function TranslatorInput({
 
     if (!trimmedText) return;
 
-    await onTranslate(trimmedText, mode as TranslationMode);
+    await onTranslate(trimmedText);
   };
 
   return (
@@ -65,7 +66,7 @@ export default function TranslatorInput({
 
       <textarea
         value={text}
-        onChange={event => setText(event.target.value)}
+        onChange={event => onTextChange(event.target.value)}
         placeholder={
           isRewriteMode
             ? "Example: We don't know who owns this yet, but someone needs to decide."
@@ -81,8 +82,8 @@ export default function TranslatorInput({
 
         {!isRewriteMode && (
           <select
-            value={mode}
-            onChange={event => setMode(event.target.value as TranslationMode)}
+            value={translationMode}
+            onChange={event => onTranslationModeChange(event.target.value as TranslationMode)}
             className="rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100"
           >
             {translateToOptions.map(opt => (
