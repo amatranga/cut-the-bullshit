@@ -34,14 +34,15 @@ const TranslationCard = ({
 
   const getShareText = () => (`
     Cut the Bullshit™
+    https://cut-the-bullshit.vercel.app/
 
     Mode: ${formatModeLabel(result.mode)}
 
     Original:
-    "${result.original}"
+      "${result.original}"
 
     Translation:
-    "${result.translation}"
+      "${result.translation}"
 
     Detected Buzzwords:
       ${result.buzzwords.length
@@ -75,6 +76,7 @@ const TranslationCard = ({
       await navigator.share({
         title: 'Cut the Bullshit',
         text: shareText,
+        url: 'https://cut-the-bullshit.vercel.app/',
       });
 
       setShared(true);
