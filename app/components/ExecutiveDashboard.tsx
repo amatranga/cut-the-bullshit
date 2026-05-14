@@ -51,7 +51,7 @@ const DashboardCard = ({
   trend,
 }: DashboardCardProps) => {
   return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-xl backdrop-blur sm:p-5">
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-xl backdrop-blur sm:p-5 transition hover:border-slate-700 hover:bg-slate-900/90">
         <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 sm:text-xs sm:tracking-[0.2em]">
           {label}
         </p>

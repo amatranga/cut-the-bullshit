@@ -36,7 +36,7 @@ const BullshitMeter = ({
   const status = getStatus();
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur p-6 shadow-2xl">
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur p-6 shadow-2xl transition hover:border-slate-700 hover:bg-slate-900/90">
       <div className="mb-6 space-y-3">
         <p className="text-xs uppercase tracking-[0.25em] text-cyan-400">
           Linguistic Analysis Engine
@@ -64,7 +64,7 @@ const BullshitMeter = ({
 
           <div className="h-5 rounded-full bg-slate-800 overflow-hidden">
             <div
-              className={`h-full transition-all duration-700 ${status.color}`}
+              className={`h-full rounded-full transition-all duration-1000 ease-out ${status.color}`}
               style={{ width: `${score}%` }}
             />
           </div>

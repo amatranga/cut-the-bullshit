@@ -10,6 +10,7 @@ import { Header } from "@/app/components/Header";
 import { ModeToggle } from "@/app/components/ModeToggle";
 import { ErrorMessage } from "@/app/components/ErrorMessage";
 import { TranslationHistory } from "@/app/components/TranslationHistory";
+import { TranslationLoadingCard } from "./components/TranslationLoadingCard";
 import {
   TranslationMode,
   AppMode,
@@ -115,7 +116,9 @@ export default function Home() {
 
           <aside className="space-y-4 self-start sm:space-y-6 lg:order-none">
             <div className="flex flex-col gap-4 sm:gap-6">
-              {result ? (
+              {isLoading ? (
+                <TranslationLoadingCard appMode={appMode} />
+              ) : result ? (
                 <>
                   <div className="order-2 lg:order-1">
                     <BullshitMeter score={result.score} appMode={appMode} />

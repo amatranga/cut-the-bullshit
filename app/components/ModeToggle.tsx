@@ -11,7 +11,7 @@ const ModeToggle = ({ appMode, onModeChange }: ModeToggleProps) => {
       <button
         type="button"
         onClick={() => onModeChange("decode")}
-        className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+        className={`rounded-lg px-4 py-2 text-sm font-semibold transition active:scale-[0.98] ${
           appMode === "decode"
             ? "bg-cyan-500 text-slate-950"
             : "text-slate-400 hover:text-slate-100"
@@ -23,7 +23,7 @@ const ModeToggle = ({ appMode, onModeChange }: ModeToggleProps) => {
       <button
         type="button"
         onClick={() => onModeChange("rewrite")}
-        className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+        className={`rounded-lg px-4 py-2 text-sm font-semibold transition active:scale-[0.98] ${
           appMode === "rewrite"
             ? "bg-cyan-500 text-slate-950"
             : "text-slate-400 hover:text-slate-100"

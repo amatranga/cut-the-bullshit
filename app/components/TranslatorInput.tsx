@@ -44,8 +44,7 @@ const TranslatorInput = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-2xl backdrop-blur sm:p-6"
-      // className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-2xl backdrop-blur"
+      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-2xl backdrop-blur sm:p-6 transition hover:border-slate-700 hover:bg-slate-900/90"
     >
       <div className="mb-5">
         <p className="text-xs uppercase tracking-[0.25em] text-cyan-400">
@@ -96,15 +95,21 @@ const TranslatorInput = ({
         <button
           type="submit"
           disabled={!text.trim()}
-          className="w-full rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-500 sm:w-auto"
+          className="w-full rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-500 sm:w-auto active:scale-[0.98]"
         >
-          {isLoading
-            ? isRewriteMode
-              ? "Generating Executive Theater..."
-              : "Aligning Stakeholders..."
-          : isRewriteMode
-            ? "Generate Bullshit"
-            : "Translate Bullshit"}
+          <span className="inline-flex items-center gap-2">
+            {isLoading && (
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950" />
+            )}
+
+            {isLoading
+              ? isRewriteMode
+                ? "Generating Executive Theater..."
+                : "Aligning Stakeholders..."
+              : isRewriteMode
+                ? "Generate Bullshit"
+                : "Translate Bullshit"}
+          </span>
         </button>
       </div>
     </form>
