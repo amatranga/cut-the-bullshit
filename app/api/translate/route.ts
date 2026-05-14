@@ -4,6 +4,7 @@ import { translateCorporateBullshit } from "@/app/lib/translate";
 import type { TranslationMode } from "@/app/lib/types";
 import { getTranslatePrompt } from "@/app/lib/prompt";
 import { rateLimit } from "@/app/lib/rateLimit";
+import { API_ERRORS } from "@/app/lib/errors";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -18,8 +19,8 @@ export async function POST(request: Request) {
 
     if (typeof text !== "string" || !text.trim()) {
       return NextResponse.json(
-        { error: "Text is required." },
-        { status: 400 }
+        { error: API_ERRORS.INVALID_INPUT.message },
+        { status: API_ERRORS.INVALID_INPUT.status },
       );
     }
 
@@ -37,11 +38,9 @@ export async function POST(request: Request) {
 
     if (!success) {
       return NextResponse.json(
+        { error: API_ERRORS.RATE_LIMITED.message },
         {
-          error: "Too much executive alignment. Please circle back shortly.",
-        },
-        {
-          status: 429,
+          status: API_ERRORS.RATE_LIMITED.status,
           headers: {
             "X-RateLimit-Reset": reset.toString(),
           },
@@ -76,8 +75,8 @@ export async function POST(request: Request) {
     }
   } catch {
     return NextResponse.json(
-      { error: "Failed to process translation request." },
-      { status: 500 }
+      { error: API_ERRORS.TRANSLATE_FAILED.message },
+      { status: API_ERRORS.TRANSLATE_FAILED.status },
     );
   }
 }

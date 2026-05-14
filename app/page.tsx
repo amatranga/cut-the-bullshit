@@ -27,6 +27,8 @@ export default function Home() {
   const [inputText, setInputText] = useState("");
   const [translationMode, setTranslationMode] = useState<TranslationMode>("cynical");
 
+  const defaultErrorMessage = "The executive ambiguity engine failed to align on outcomes.";
+
   useEffect(() => {
     const storedHistory = localStorage.getItem("ctb-translation-history");
     if (!storedHistory) return;
@@ -54,7 +56,11 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error("Translation request failed.");
+        const errorBody = await response.json().catch(() => null);
+
+        throw new Error(
+          errorBody?.error ?? defaultErrorMessage
+        );
       }
 
       const translationResult = await response.json();
@@ -79,7 +85,7 @@ export default function Home() {
         return nextHistory;
       });
     } catch (error) {
-      setError("The executive ambiguity engine failed to align on outcomes.");
+      setError(error instanceof Error ? error.message : defaultErrorMessage);
     } finally {
       setIsLoading(false);
     }
