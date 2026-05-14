@@ -6,7 +6,7 @@ type EmptyStateProps = {
 
 const EmptyState = ({ appMode }: EmptyStateProps) => {
   return (
-    <aside className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-2xl">
+    <aside className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-2xl transition hover:border-slate-700 hover:bg-slate-900/90">
       <p className="text-xs uppercase tracking-[0.25em] text-cyan-400">
         {appMode === "decode" ? "Linguistic Analysis Engine" : "Executive Abstraction Engine"}
       </p>

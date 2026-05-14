@@ -95,7 +95,7 @@ const TranslatorInput = ({
         <button
           type="submit"
           disabled={!text.trim()}
-          className="w-full rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-500 sm:w-auto active:scale-[0.98]"
+          className="w-full rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-500 sm:w-auto active:scale-[0.98] disabled:scale-[1]"
         >
           <span className="inline-flex items-center gap-2">
             {isLoading && (
