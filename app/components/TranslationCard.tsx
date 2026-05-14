@@ -34,7 +34,6 @@ const TranslationCard = ({
 
   const getShareText = () => (`
     Cut the Bullshit™
-    https://cut-the-bullshit.vercel.app/
 
     Mode: ${formatModeLabel(result.mode)}
 
