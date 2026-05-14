@@ -17,7 +17,7 @@ const TranslationHistory = ({
   if (hist.length === 0) return null;
 
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-2xl">
+    <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-2xl transition hover:border-slate-700 hover:bg-slate-900/90">
       <button
         type="button"
         onClick={() => setIsOpen(prev => !prev)}
@@ -45,7 +45,7 @@ const TranslationHistory = ({
               key={item.id}
               type="button"
               onClick={() => onSelect(item)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-left transition hover:border-cyan-500/50"
+              className="w-full rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-left transition hover:border-cyan-500/50 active:scale-[0.98]"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-cyan-300">

@@ -88,7 +88,7 @@ const TranslationCard = ({
   }
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur p-5 shadow-2xl">
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/70 backdrop-blur p-5 shadow-2xl transition hover:border-slate-700 hover:bg-slate-900/90">
       <div className="mb-6 space-y-3">
         <div className="flex items-start justify-between gap-4">
           <p className="text-xs uppercase tracking-[0.25em] text-cyan-400">
@@ -103,7 +103,7 @@ const TranslationCard = ({
             <button
               type="button"
               onClick={handleCopy}
-              className="hidden rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700 sm:inline-flex"
+              className="hidden rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700 sm:inline-flex active:scale-[0.98]"
             >
               {copied ? "Copied!" : "Copy"}
             </button>
@@ -111,7 +111,7 @@ const TranslationCard = ({
             <button
               type="button"
               onClick={handleShare}
-              className="inline-flex rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700"
+              className="inline-flex rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700 active:scale-[0.98]"
             >
               {shared ? "Shared!" : "Share"}
             </button>
