@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Analytics } from "@vercel/analytics/react"
 import { track } from "@vercel/analytics";
 import { TranslatorInput } from "@/app/components/TranslatorInput";
 import { TranslationCard } from "@/app/components/TranslationCard";
@@ -19,6 +18,7 @@ import {
   TranslationResult,
   TranslationHistoryItem,
 } from "@/app/lib/types";
+import { trackEvent } from "@/app/lib/analytics";
 
 export default function Home() {
   const [result, setResult] = useState<TranslationResult | null>(null);
@@ -43,7 +43,8 @@ export default function Home() {
   }, []);
 
   const handleTranslate = async (text: string) => {
-    track('translate', { appMode, translationMode });
+    track("translate", { appMode, translationMode });
+    trackEvent("translate", { appMode, translationMode });
 
     setIsLoading(true);
     setError(null);
@@ -96,7 +97,8 @@ export default function Home() {
   };
 
   const handleSelectHistoryItem = (item: TranslationHistoryItem) => {
-    track('Select history item');
+    track("select_history_item");
+    trackEvent("select_history_item", {});
     
     setResult(item);
     setAppMode(item.appMode);
@@ -105,56 +107,53 @@ export default function Home() {
   };
 
   return (
-    <>
-      <main className="min-h-screen bg-slate-950 text-slate-100 p-3 sm:p-4 lg:p-6">
-        <div className="mx-auto max-w-[1400px] space-y-4 px-2 sm:space-y-6">
-          <Header />
+    <main className="min-h-screen bg-slate-950 text-slate-100 p-3 sm:p-4 lg:p-6">
+      <div className="mx-auto max-w-[1400px] space-y-4 px-2 sm:space-y-6">
+        <Header />
 
-          <ExecutiveDashboard result={result} />
+        <ExecutiveDashboard result={result} />
 
-          {error && <ErrorMessage message={error} />}
+        {error && <ErrorMessage message={error} />}
 
-          <ModeToggle appMode={appMode} onModeChange={setAppMode} />
+        <ModeToggle appMode={appMode} onModeChange={setAppMode} />
 
-          <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_520px] lg:gap-6">
-            <TranslatorInput
-              onTranslate={handleTranslate}
-              isLoading={isLoading}
-              appMode={appMode}
-              text={inputText}
-              onTextChange={setInputText}
-              translationMode={translationMode}
-              onTranslationModeChange={setTranslationMode}
-            />
+        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_520px] lg:gap-6">
+          <TranslatorInput
+            onTranslate={handleTranslate}
+            isLoading={isLoading}
+            appMode={appMode}
+            text={inputText}
+            onTextChange={setInputText}
+            translationMode={translationMode}
+            onTranslationModeChange={setTranslationMode}
+          />
 
-            <aside className="space-y-4 self-start sm:space-y-6 lg:order-none">
-              <div className="flex flex-col gap-4 sm:gap-6">
-                {isLoading ? (
-                  <TranslationLoadingCard appMode={appMode} />
-                ) : result ? (
-                  <>
-                    <div className="order-2 lg:order-1">
-                      <BullshitMeter score={result.score} appMode={appMode} />
-                    </div>
-                    <div className="order-1 lg:order-2">
-                      <TranslationCard result={result} appMode={appMode} />
-                    </div>
-                  </>
-                ) : (
-                  <EmptyState appMode={appMode} />
-                )}
-                <div className="order-3">
-                  <TranslationHistory
-                    hist={history}
-                    onSelect={handleSelectHistoryItem}
-                  />
-                </div>
+          <aside className="space-y-4 self-start sm:space-y-6 lg:order-none">
+            <div className="flex flex-col gap-4 sm:gap-6">
+              {isLoading ? (
+                <TranslationLoadingCard appMode={appMode} />
+              ) : result ? (
+                <>
+                  <div className="order-2 lg:order-1">
+                    <BullshitMeter score={result.score} appMode={appMode} />
+                  </div>
+                  <div className="order-1 lg:order-2">
+                    <TranslationCard result={result} appMode={appMode} />
+                  </div>
+                </>
+              ) : (
+                <EmptyState appMode={appMode} />
+              )}
+              <div className="order-3">
+                <TranslationHistory
+                  hist={history}
+                  onSelect={handleSelectHistoryItem}
+                />
               </div>
-            </aside>
-          </div>
+            </div>
+          </aside>
         </div>
-      </main>
-      <Analytics />
-    </>
+      </div>
+    </main>
   );
 }
