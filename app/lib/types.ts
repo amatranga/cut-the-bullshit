@@ -1,10 +1,10 @@
-export type TranslationMode =
+type TranslationMode =
   | "direct"
   | "cynical"
   | "executive"
   | "slack-goblin";
 
-export type TranslationResult = {
+type TranslationResult = {
   original: string;
   translation: string;
   score: number;
@@ -13,10 +13,17 @@ export type TranslationResult = {
   fallbackUsed?: boolean;
 };
 
-export type AppMode = "decode" | "rewrite"
+type AppMode = "decode" | "rewrite"
 
-export type TranslationHistoryItem = TranslationResult & {
+type TranslationHistoryItem = TranslationResult & {
   id: string;
   appMode: AppMode;
   createdAt: number;
-}
+};
+
+export type {
+  TranslationMode,
+  TranslationResult,
+  AppMode,
+  TranslationHistoryItem,
+};

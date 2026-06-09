@@ -3,14 +3,13 @@ import { NextResponse } from "next/server";
 import { translateCorporateBullshit } from "@/app/lib/translate";
 import type { TranslationMode } from "@/app/lib/types";
 import { getTranslatePrompt } from "@/app/lib/prompt";
-import { rateLimit } from "@/app/lib/rateLimit";
 import { API_ERRORS } from "@/app/lib/errors";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function POST(request: Request) {
+const POST = async (request: Request) => {
   try {
     const body = await request.json();
 
@@ -30,24 +29,6 @@ export async function POST(request: Request) {
       mode as TranslationMode
     );
     
-    // Rate limiting
-    const forwardedFor = request.headers.get("x-forwarded-for");
-    const ip = forwardedFor?.split(",")[0] ?? "unknown";
-
-    const { success, reset } = await rateLimit.limit(ip);
-
-    if (!success) {
-      return NextResponse.json(
-        { error: API_ERRORS.RATE_LIMITED.message },
-        {
-          status: API_ERRORS.RATE_LIMITED.status,
-          headers: {
-            "X-RateLimit-Reset": reset.toString(),
-          },
-        }
-      );
-    };
-
     try {
       // Generate ai translation
       const aiTranslation = await generateAiTranslation(
@@ -81,10 +62,10 @@ export async function POST(request: Request) {
   }
 }
 
-async function generateAiTranslation(
+const generateAiTranslation = async (
   text: string,
   mode: TranslationMode
-) {
+) => {
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
@@ -101,3 +82,5 @@ async function generateAiTranslation(
 
   return response.choices[0].message.content?.trim() ?? "";
 }
+
+export { POST };
