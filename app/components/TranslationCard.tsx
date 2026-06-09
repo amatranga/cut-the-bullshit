@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { toBlob } from "html-to-image";
+import { track } from "@vercel/analytics";
 import { AppMode, TranslationMode, TranslationResult } from "@/app/lib/types";
 
 type TranslationCardProps = {
@@ -55,6 +56,8 @@ const TranslationCard = ({
   );
 
   const handleCopy = async () => {
+    track('copy');
+
     if (!cardRef.current) return;
 
     try {
@@ -73,6 +76,7 @@ const TranslationCard = ({
 
       setCopied(true);
     } catch {
+      track('copy failed, writing text');
       await navigator.clipboard.writeText(getShareText());
       setCopied(true);
     }
@@ -83,6 +87,8 @@ const TranslationCard = ({
   };
 
   const handleShare = async () => {
+    track('share');
+
     const shareText = getShareText();
 
     if (!navigator.share) {
