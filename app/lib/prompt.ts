@@ -1,6 +1,6 @@
 import { TranslationMode } from "./types";
 
-export function getTranslatePrompt(mode: TranslationMode) {
+const getTranslatePrompt = (mode: TranslationMode) => {
   const basePrompt = `
 You are the translation engine for an app called "Cut the Bullshit."
 
@@ -43,7 +43,7 @@ Rules:
   return `${basePrompt}\n${modePrompt[mode]}`;
 }
 
-export function generateRewritePrompt() {
+const generateRewritePrompt = () => {
   return `
     You are the Executive Rewrite engine for an app called "Cut the Bullshit."
 
@@ -121,4 +121,9 @@ const modePrompt: Record<TranslationMode, string> = {
     - "alignment theater goes crazy"
     - "this meeting could’ve been accountability"
     `,
+};
+
+export {
+  getTranslatePrompt,
+  generateRewritePrompt,
 };

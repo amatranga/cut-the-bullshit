@@ -55,14 +55,6 @@ const TranslationCard = ({
   );
 
   const handleCopy = async () => {
-    // const shareText = getShareText();
-    // await navigator.clipboard.writeText(shareText);
-
-    // setCopied(true);
-
-    // setTimeout(() => {
-    //   setCopied(false);
-    // }, 2000);
     if (!cardRef.current) return;
 
     try {
@@ -128,22 +120,6 @@ const TranslationCard = ({
                 {appMode === "decode" && (<div className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300">
                   {formatModeLabel(result.mode)}
                 </div>)}
-
-                {/* <button
-                  type="button"
-                  onClick={handleCopy}
-                  className="hidden rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700 sm:inline-flex active:scale-[0.98]"
-                >
-                  {copied ? "Copied!" : "Copy"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="inline-flex rounded-full border border-slate-700 bg-slate-800/80 px-3 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:bg-slate-700 active:scale-[0.98]"
-                >
-                  {shared ? "Shared!" : "Share"}
-                </button> */}
               </div>
             </div>
 
