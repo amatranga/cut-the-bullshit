@@ -1,8 +1,8 @@
 import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/app/lib/redis"
 
 const rateLimit = new Ratelimit({
-  redis: Redis.fromEnv(),
+  redis,
   limiter: Ratelimit.slidingWindow(10, "1 m"),
   analytics: true,
   prefix: "ctb:ratelimit",
