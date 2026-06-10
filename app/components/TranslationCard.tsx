@@ -56,7 +56,10 @@ const TranslationCard = ({
   );
 
   const handleCopy = async () => {
-    trackEvent("copy", {});
+    trackEvent("copy", {
+      appMode,
+      translationMode: result.mode,
+    });
 
     if (!cardRef.current) return;
 
@@ -87,7 +90,10 @@ const TranslationCard = ({
   };
 
   const handleShare = async () => {
-    trackEvent("share", {});
+    trackEvent("share", {
+      appMode,
+      translationMode: result.mode,
+    });
 
     const shareText = getShareText();
 

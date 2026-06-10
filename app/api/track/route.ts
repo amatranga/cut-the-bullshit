@@ -9,6 +9,8 @@ type TrackRequestBody = {
 
 const EVENTS_LIST_KEY = "analytics:events";
 const EVENT_COUNTER_PREFIX = "analytics:event";
+const APP_MODE_KEY = "analytics:appMode";
+const TRANSLATION_MODE_KEY = "analytics:translationMode";
 const env = process.env.ENVIRONMENT_VAR
 
 const safeKeyPart = (value: unknown) => (
@@ -58,12 +60,24 @@ const POST = async (request: Request) => {
 
     if (event === "translate") {
       if (appMode) {
-        pipeline.incr(`analytics:appMode:${appMode}`);
+        pipeline.incr(`${APP_MODE_KEY}:${appMode}`);
       }
 
       if (translationMode) {
-        pipeline.incr(`analytics:translationMode:${translationMode}`);
+        pipeline.incr(`${TRANSLATION_MODE_KEY}:${translationMode}`);
       }
+    }
+
+    if (event === "share") {
+      pipeline
+      .incr(`${APP_MODE_KEY}:${appMode}:share`)
+        .incr(`${TRANSLATION_MODE_KEY}:${translationMode}:share`);
+    }
+
+    if (event === "copy") {
+      pipeline
+        .incr(`${APP_MODE_KEY}:${appMode}:copy`)
+        .incr(`${TRANSLATION_MODE_KEY}:${translationMode}:copy`);
     }
 
     await pipeline.exec();
