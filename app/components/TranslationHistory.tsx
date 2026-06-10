@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { TranslationHistoryItem } from "@/app/lib/types";
+import { trackEvent } from "@/app/lib/analytics";
 
 type TranslationHistoryProps = {
   hist: TranslationHistoryItem[];
@@ -14,13 +15,18 @@ const TranslationHistory = ({
 }: TranslationHistoryProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleClick = () => {
+    trackEvent("toggle_history", { isOpen });
+    setIsOpen(prev => !prev);
+  }
+
   if (hist.length === 0) return null;
 
   return (
     <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-2xl transition hover:border-slate-700 hover:bg-slate-900/90">
       <button
         type="button"
-        onClick={() => setIsOpen(prev => !prev)}
+        onClick={handleClick}
         className="flex w-full items-center justify-between gap-4 text-left"
       >
         <div>

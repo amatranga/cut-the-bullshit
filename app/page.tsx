@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { track } from "@vercel/analytics";
 import { TranslatorInput } from "@/app/components/TranslatorInput";
 import { TranslationCard } from "@/app/components/TranslationCard";
 import { BullshitMeter } from "@/app/components/BullshitMeter";
@@ -43,8 +42,10 @@ export default function Home() {
   }, []);
 
   const handleTranslate = async (text: string) => {
-    track("translate", { appMode, translationMode });
-    trackEvent("translate", { appMode, translationMode });
+    trackEvent("translate", {
+      appMode,
+      translationMode,
+    });
 
     setIsLoading(true);
     setError(null);
@@ -97,7 +98,6 @@ export default function Home() {
   };
 
   const handleSelectHistoryItem = (item: TranslationHistoryItem) => {
-    track("select_history_item");
     trackEvent("select_history_item", {});
     
     setResult(item);
