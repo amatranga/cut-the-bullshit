@@ -15,6 +15,14 @@ const API_ERRORS = {
     status: 500,
     message: "The strategic obfuscation engine failed to generate sufficient enterprise value.",
   },
+  INVALID_EVENT: {
+    status: 400,
+    message: "The occurrence is not currently recognized within our established operational parameters."
+  },
+  ANALYTICS_FAILED: {
+    status: 500,
+    message: "The analytics tracking mechanism has encountered performance challenges that necessitate immediate attention to ensure data integrity and insight delivery.",
+  }
 } as const;
 
 export { API_ERRORS };

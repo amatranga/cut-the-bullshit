@@ -1,23 +1,17 @@
-import { redis } from "@/app/lib/redis";
-
-const trackEvent = async (
+const trackEvent = (
   event: string,
-  metadata: Record<string, unknown>,
+  metadata: Record<string, unknown> = {},
 ) => {
-  const name = "analytics:events";
-
-  await redis.pipeline()
-    .lpush(
-      name,
-      JSON.stringify({
-        name,
-        timestamp: Date.now(),
-        ...metadata,
-      })
-    )
-    .ltrim(name, 0, 9999)
-    .incr(`${name}:${event}`)
-    .exec();
-}
+  void fetch("/api/track", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ event, metadata }),
+    keepalive: true,
+  }).catch(() => {
+    // Tracking should never block UI interactions.
+  });
+};
 
 export { trackEvent };
