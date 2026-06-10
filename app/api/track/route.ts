@@ -9,7 +9,7 @@ type TrackRequestBody = {
 
 const EVENTS_LIST_KEY = "analytics:events";
 const EVENT_COUNTER_PREFIX = "analytics:event";
-const ENV = process.env.ENV
+const env = process.env.ENVIRONMENT_VAR
 
 const safeKeyPart = (value: unknown) => (
   typeof value === "string"
@@ -21,7 +21,7 @@ const POST = async (request: Request) => {
   try {
     const body = (await request.json()) as TrackRequestBody;
     const event = safeKeyPart(body?.event);
-    const isProd = ENV === "production";
+    const isProd = env === "production";
 
     if (!isProd) {
       return NextResponse.json({ ok: true });
