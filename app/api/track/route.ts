@@ -9,7 +9,7 @@ type TrackRequestBody = {
 
 const EVENTS_LIST_KEY = "analytics:events";
 const EVENT_COUNTER_PREFIX = "analytics:event";
-const ENV = process.env.ENVIRONMENT
+const ENV = process.env.ENV
 
 const safeKeyPart = (value: unknown) => (
   typeof value === "string"
