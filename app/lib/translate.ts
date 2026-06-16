@@ -4,7 +4,7 @@ import {
 } from "./jargon";
 import { TranslationMode, TranslationResult } from "./types";
 
-export function translateCorporateBullshit(text: string, mode: TranslationMode = 'cynical'): TranslationResult {
+const translateCorporateBullshit = (text: string, mode: TranslationMode = 'cynical'): TranslationResult => {
   const lowerText = text.toLowerCase();
 
   const buzzwords = CORPORATE_JARGON.filter(word =>
@@ -22,17 +22,17 @@ export function translateCorporateBullshit(text: string, mode: TranslationMode =
   };
 }
 
-function getFallbackTranslation(
+const getFallbackTranslation = (
   text: string,
   mode: TranslationMode
-) {
+) => {
   const translations = FALLBACK_TRANSLATIONS_BY_MODE[mode];
   const index = getDeterministicIndex(text, translations.length);
 
   return translations[index];
 }
 
-function getDeterministicIndex(text: string, length: number) {
+const getDeterministicIndex = (text: string, length: number) => {
   const hash = text
     .split("")
     .reduce((sum, char) => sum + char.charCodeAt(0), 0);
@@ -40,7 +40,7 @@ function getDeterministicIndex(text: string, length: number) {
   return hash % length;
 }
 
-function calculateBullshitScore(buzzwords: string[]) {
+const calculateBullshitScore = (buzzwords: string[]) => {
   const baseScore = 10;
 
   const weightedScore = buzzwords.reduce((total, word) => {
@@ -82,3 +82,5 @@ const FALLBACK_TRANSLATIONS_BY_MODE: Record<TranslationMode, string[]> = {
     "this meeting could’ve been accountability",
   ],
 };
+
+export { translateCorporateBullshit };

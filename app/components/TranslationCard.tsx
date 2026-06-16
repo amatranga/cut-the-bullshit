@@ -18,21 +18,15 @@ const TranslationCard = ({
   const [shared, setShared] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const formatModeLabel = (mode: TranslationMode) => {
-    switch (mode) {
-      case "direct":
-        return "Direct Mode";
-
-      case "executive":
-        return "Executive Decoder";
-
-      case "slack-goblin":
-        return "Slack Goblin Mode";
-
-      case "cynical":
-      default:
-        return "Cynical Mode";
-    }
+  const formatModeLabel = (mode: TranslationMode | undefined) => {
+    const modeMap: Record<TranslationMode, string> = {
+      direct: "Direct Mode",
+      executive: "Executive Decoder",
+      "slack-goblin": "Slack Goblin Mode",
+      cynical: "Cynical Mode",
+    };
+    
+    return mode ? modeMap[mode] : modeMap.cynical;
   }
 
   const getShareText = () => (`
@@ -47,7 +41,7 @@ const TranslationCard = ({
       "${result.translation}"
 
     Detected Buzzwords:
-      ${result.buzzwords.length
+      ${result.buzzwords?.length
         ? result.buzzwords.join(", ")
         : "None" }
 
@@ -163,22 +157,24 @@ const TranslationCard = ({
               </div>
             </section>
 
-            {appMode === "decode" && (<section>
-              <p className="text-xs uppercase tracking-widest text-slate-500 mb-3">
-                Detected Buzzwords
-              </p>
+            {appMode === "decode" && (
+              <section>
+                <p className="text-xs uppercase tracking-widest text-slate-500 mb-3">
+                  Detected Buzzwords
+                </p>
 
-              <div className="flex flex-wrap gap-2">
-                {result.buzzwords.map(word => (
-                  <span
-                    key={word}
-                    className="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-sm text-amber-200"
-                  >
-                    {word}
-                  </span>
-                ))}
-              </div>
-            </section>)}
+                <div className="flex flex-wrap gap-2">
+                  {result.buzzwords?.map(word => (
+                    <span
+                      key={word}
+                      className="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-sm text-amber-200"
+                    >
+                      {word}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         </div>
 

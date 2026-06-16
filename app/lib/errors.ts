@@ -22,7 +22,19 @@ const API_ERRORS = {
   ANALYTICS_FAILED: {
     status: 500,
     message: "The analytics tracking mechanism has encountered performance challenges that necessitate immediate attention to ensure data integrity and insight delivery.",
-  }
+  },
+  ANALYSIS_EMPTY_INPUT: {
+    status: 400,
+    message: "Kindly share the necessary documentation for comprehensive analysis to facilitate informed decision-making.",
+  },
+  ANALYSIS_FAILED: {
+    status: 500,
+    message: "Analytical insights have not yet been synthesized and disseminated for stakeholder review",
+  },
+  GENERIC_ERROR: {
+    status: 500,
+    message: "The corporate analysis engine failed to align on insights.",
+  },
 } as const;
 
 export { API_ERRORS };

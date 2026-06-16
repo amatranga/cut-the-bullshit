@@ -10,17 +10,20 @@ import { Header } from "@/app/components/Header";
 import { ModeToggle } from "@/app/components/ModeToggle";
 import { ErrorMessage } from "@/app/components/ErrorMessage";
 import { TranslationHistory } from "@/app/components/TranslationHistory";
-import { TranslationLoadingCard } from "./components/TranslationLoadingCard";
+import { TranslationLoadingCard } from "@/app/components/TranslationLoadingCard";
+import { AnalysisResultCard } from "@/app/components/AnalysisResultCard";
 import {
   TranslationMode,
   AppMode,
   TranslationResult,
   TranslationHistoryItem,
+  AnalysisResult,
 } from "@/app/lib/types";
 import { trackEvent } from "@/app/lib/analytics";
 
 export default function Home() {
   const [result, setResult] = useState<TranslationResult | null>(null);
+  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [appMode, setAppMode] = useState<AppMode>("decode");
@@ -41,24 +44,41 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (analysis) {
+      console.log(analysis);
+    }
+  }, [analysis]);
+
   const handleTranslate = async (text: string) => {
-    trackEvent("translate", {
-      appMode,
-      translationMode,
-    });
+    const event = appMode === "analyze" ? "analyze" : "translate";
+    const metadata: Record<string, unknown> = { appMode };
+
+    if (event !== "analyze") {
+      metadata.translationMode = translationMode;
+    }
+
+    trackEvent(event, metadata);
 
     setIsLoading(true);
     setError(null);
 
     try {
-      const endpoint = appMode === "rewrite" ? "/api/rewrite" : "/api/translate";
+      const endpointMap: Record<AppMode, string> = {
+        analyze: "/api/analyze",
+        rewrite: "/api/rewrite",
+        decode: "/api/translate",
+      };
+
+      const endpoint = endpointMap[appMode];
+      const requestBody = appMode === "analyze" ? { text } : { text, translationMode };
 
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text, translationMode }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -71,25 +91,33 @@ export default function Home() {
 
       const translationResult = await response.json();
 
-      setResult(translationResult);
+      console.log(translationResult, ' || translationResult');
+      
+      if (appMode !== "analyze") {
+        setResult(translationResult);
+  
+        const historyItem: TranslationHistoryItem = {
+          ...translationResult,
+          id: crypto.randomUUID(),
+          appMode,
+          createdAt: Date.now(),
+        };
+  
+        setHistory(prevHistory => {
+          const nextHistory = [historyItem, ...prevHistory].slice(0, 10);
+          
+          localStorage.setItem(
+            "ctb-translation-history",
+            JSON.stringify(nextHistory),
+          );
+  
+          return nextHistory;
+        });
+      }
 
-      const historyItem: TranslationHistoryItem = {
-        ...translationResult,
-        id: crypto.randomUUID(),
-        appMode,
-        createdAt: Date.now(),
-      };
-
-      setHistory(prevHistory => {
-        const nextHistory = [historyItem, ...prevHistory].slice(0, 10);
-        
-        localStorage.setItem(
-          "ctb-translation-history",
-          JSON.stringify(nextHistory),
-        );
-
-        return nextHistory;
-      });
+      if (appMode === "analyze") {
+        setAnalysis(translationResult.analysis);
+      }
     } catch (error) {
       setError(error instanceof Error ? error.message : defaultErrorMessage);
     } finally {
@@ -103,7 +131,10 @@ export default function Home() {
     setResult(item);
     setAppMode(item.appMode);
     setInputText(item.original);
-    setTranslationMode(item.mode);
+
+    if (item.mode) {
+      setTranslationMode(item.mode);
+    }
   };
 
   return (
@@ -124,26 +155,33 @@ export default function Home() {
             appMode={appMode}
             text={inputText}
             onTextChange={setInputText}
-            translationMode={translationMode}
+            translationMode={translationMode || "cynical"}
             onTranslationModeChange={setTranslationMode}
           />
 
           <aside className="space-y-4 self-start sm:space-y-6 lg:order-none">
             <div className="flex flex-col gap-4 sm:gap-6">
-              {isLoading ? (
-                <TranslationLoadingCard appMode={appMode} />
-              ) : result ? (
+              {isLoading && <TranslationLoadingCard appMode={appMode} />}
+              
+              {result && (appMode === "decode" || appMode === "rewrite") && (
                 <>
                   <div className="order-2 lg:order-1">
-                    <BullshitMeter score={result.score} appMode={appMode} />
+                    <BullshitMeter score={result.score ?? 100} appMode={appMode} />
                   </div>
                   <div className="order-1 lg:order-2">
                     <TranslationCard result={result} appMode={appMode} />
                   </div>
                 </>
-              ) : (
-                <EmptyState appMode={appMode} />
               )}
+
+              {appMode === "analyze" && analysis && (
+                <div className="order-1">
+                  <AnalysisResultCard analysis={analysis} />
+                </div>
+              )}
+
+              {!isLoading && !result && !analysis && <EmptyState appMode={appMode} />}
+                
               <div className="order-3">
                 <TranslationHistory
                   hist={history}

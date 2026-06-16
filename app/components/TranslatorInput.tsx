@@ -1,6 +1,7 @@
 "use client"
 
-import { AppMode, TranslationMode } from "@/app/lib/types";
+import { SubmitEvent } from "react";
+import { AppMode, TranslationMode, PlaceholderTextRecord } from "@/app/lib/types";
 
 type TranslatorInputProps = {
   onTranslate: (text: string) => void | Promise<void>;
@@ -17,7 +18,40 @@ const translateToOptions = [
   { id: 'direct', name: 'Direct' },
   { id: 'executive', name: 'Executive Decoder' },
   { id: 'slack-goblin', name: 'Slack Goblin' },
-]
+];
+
+const modePlaceholderTextMap: Record<AppMode, PlaceholderTextRecord> = {
+  decode: {
+    superHeader: "Corporate Communication Intake",
+    header: "Submit Statement for Analysis",
+    subheader: "Paste a Slack message, leadership email, meeting note, or recruiter sentence that requires executive decontamination.",
+    example: "Example: We need to leverage cross-functional synergies to drive alignment across key stakeholders...",
+    button: {
+      loading: "Generating Executive Theater...",
+      default: "Generate Bullshit",
+    }
+  },
+  rewrite: {
+    superHeader: "Communication Obfuscator",
+    header: "Submit Statement for Executive Enhancement",
+    subheader: "Paste a normal human sentence and convert it into enterprise-grade strategic abstraction.",
+    example: "Example: We don't know who owns this yet, but someone needs to decide.",
+    button: {
+      loading: "Aligning Stakeholders...",
+      default: "Translate Bullshit",
+    }
+  },
+  analyze: {
+    superHeader: "Communication Summarizer",
+    header: "Analyze Corporate Communication",
+    subheader: "Paste an email, meeting summary, Slack conversation, or announcement to identify the real message, hidden risks, and likely outcome.",
+    example: "Example: We appreciate everyone's flexibility as we continue aligning on next steps across our cross-functional partners...",
+    button: {
+      loading: "Analyzing Corporate Dynamics...",
+      default: "Analyze Communication",
+    },
+  },
+};
 
 const TranslatorInput = ({
   onTranslate,
@@ -29,9 +63,7 @@ const TranslatorInput = ({
   onTranslationModeChange,
 }: TranslatorInputProps) => {
 
-  const isRewriteMode = appMode === "rewrite";
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const trimmedText = text.trim();
@@ -41,6 +73,8 @@ const TranslatorInput = ({
     await onTranslate(trimmedText);
   };
 
+  const { superHeader, header, subheader, example, button } = modePlaceholderTextMap[appMode];
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -48,30 +82,22 @@ const TranslatorInput = ({
     >
       <div className="mb-5">
         <p className="text-xs uppercase tracking-[0.25em] text-cyan-400">
-          Corporate Communication Intake
+          {superHeader}
         </p>
 
         <h2 className="mt-2 text-2xl font-semibold">
-          {isRewriteMode
-          ? "Submit Plain Statement for Executive Enhancement"
-          : "Submit Statement for Analysis"}
+          {header}
         </h2>
 
         <p className="mt-2 text-sm text-slate-400">
-          {isRewriteMode
-          ? "Paste a normal human sentence and convert it into enterprise-grade strategic abstraction."
-          : "Paste a Slack message, leadership email, meeting note, or recruiter sentence that requires executive decontamination."}
+          {subheader}
         </p>
       </div>
 
       <textarea
         value={text}
         onChange={event => onTextChange(event.target.value)}
-        placeholder={
-          isRewriteMode
-            ? "Example: We don't know who owns this yet, but someone needs to decide."
-            : "Example: We need to leverage cross-functional synergies to drive alignment across key stakeholders..."
-        }
+        placeholder={example}
         className="h-[260px] sm:h-[320px] lg:h-[360px] w-full resize-none overflow-y-auto rounded-xl border border-slate-800 bg-slate-950/80 p-4 text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500"
       />
 
@@ -80,7 +106,7 @@ const TranslatorInput = ({
           Powered by proprietary executive ambiguity detection.
         </p>
 
-        {!isRewriteMode && (
+        {appMode === "decode" && (
           <select
             value={translationMode}
             onChange={event => onTranslationModeChange(event.target.value as TranslationMode)}
@@ -102,13 +128,7 @@ const TranslatorInput = ({
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950" />
             )}
 
-            {isLoading
-              ? isRewriteMode
-                ? "Generating Executive Theater..."
-                : "Aligning Stakeholders..."
-              : isRewriteMode
-                ? "Generate Bullshit"
-                : "Translate Bullshit"}
+            {isLoading ? button?.loading : button?.default}
           </span>
         </button>
       </div>

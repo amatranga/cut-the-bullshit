@@ -8,7 +8,7 @@ const ExecutiveDashboard = ({
   result,
 }: ExecutiveDashboardProps) => {
   const score = result?.score ?? 0;
-  const buzzwordCount = result?.buzzwords.length ?? 0;
+  const buzzwordCount = result?.buzzwords?.length ?? 0;
 
   return (
     <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
