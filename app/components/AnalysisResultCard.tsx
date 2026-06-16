@@ -106,18 +106,30 @@ const AnalysisResultCard = ({ analysis }: AnalysisResultCardProps) => {
           </div>
 
           <h2 className="text-2xl font-semibold">
-            Corporate Communication Analysis
+            Cut the Bullshit Analysis
           </h2>
 
         </div>
 
         <div className="space-y-4">
           <section>
-            <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
-              Summary
+            <p className="text-xs uppercase tracking-widest text-cyan-400 mb-2">
+              Executive Summary
             </p>
-            <div className="rounded-xl bg-slate-950 border border-slate-800 p-3 text-sm text-slate-300 italic">
-              {analysis.summary}
+
+            <div className="rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-5">
+              <p className="text-2xl font-bold leading-tight text-white">
+                {analysis.summary}
+              </p>
+            </div>
+          </section>
+
+          <section>
+            <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
+              Likely Outcome
+            </p>
+            <div className="rounded-xl bg-slate-950 border border-slate-800 p-4 text-sm leading-relaxed font-medium">
+              {analysis.likelyOutcome}
             </div>
           </section>
 
@@ -125,7 +137,7 @@ const AnalysisResultCard = ({ analysis }: AnalysisResultCardProps) => {
             <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
               Actual Meaning
             </p>
-            <div className="rounded-xl bg-slate-950 border border-slate-800 p-3 text-sm text-slate-300 italic">
+            <div className="rounded-xl bg-slate-950 border border-slate-800 p-4 text-sm leading-relaxed font-medium">
               <ul className="mt-1 list-disc space-y-1 pl-5 text-zinc-100">
                 {analysis.actualMeaning.map((item) => (
                   <li key={item}>{item}</li>
@@ -138,21 +150,12 @@ const AnalysisResultCard = ({ analysis }: AnalysisResultCardProps) => {
             <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
               Risks
             </p>
-            <div className="rounded-xl bg-slate-950 border border-slate-800 p-3 text-sm text-slate-300 italic">
+            <div className="rounded-xl bg-slate-950 border border-slate-800 p-4 text-sm leading-relaxed font-medium">
               <ul className="mt-1 list-disc space-y-1 pl-5 text-zinc-100">
                 {analysis.risks.map((risk) => (
                   <li key={risk}>{risk}</li>
                 ))}
               </ul>
-            </div>
-          </section>
-
-          <section>
-            <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
-              Likely Outcome
-            </p>
-            <div className="rounded-xl bg-slate-950 border border-slate-800 p-3 text-sm text-slate-300 italic">
-              {analysis.likelyOutcome}
             </div>
           </section>
         </div>

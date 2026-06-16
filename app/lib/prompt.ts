@@ -198,6 +198,8 @@ Risks
   - Timeline will slip.
   - Testing window continues shrinking.
   - Priorities remain unresolved.
+- If an observation is merely a restatement of the document or is low-confidence, omit it.
+- It is better to return 3 excellent observations than 5 mediocre ones.
 
 Likely Outcome
 - Exactly one sentence.
