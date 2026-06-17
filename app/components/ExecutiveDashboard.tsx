@@ -1,4 +1,4 @@
-import { TranslationResult } from "../lib/types";
+import { TranslationResult } from "@/app/lib/types";
 
 type ExecutiveDashboardProps = {
   result: TranslationResult | null;
