@@ -44,12 +44,6 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    if (analysis) {
-      console.log(analysis);
-    }
-  }, [analysis]);
-
   const handleTranslate = async (text: string) => {
     const event = appMode === "analyze" ? "analyze" : "translate";
     const metadata: Record<string, unknown> = { appMode };
@@ -90,8 +84,6 @@ export default function Home() {
       }
 
       const translationResult = await response.json();
-
-      console.log(translationResult, ' || translationResult');
       
       if (appMode !== "analyze") {
         setResult(translationResult);
@@ -142,7 +134,11 @@ export default function Home() {
       <div className="mx-auto max-w-[1400px] space-y-4 px-2 sm:space-y-6">
         <Header />
 
-        <ExecutiveDashboard result={result} />
+        <ExecutiveDashboard
+          result={result}
+          analysis={analysis}
+          appMode={appMode}
+        />
 
         {error && <ErrorMessage message={error} />}
 

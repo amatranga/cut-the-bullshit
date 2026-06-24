@@ -1,12 +1,44 @@
-import { TranslationResult } from "@/app/lib/types";
+import { AnalysisResult, AppMode, TranslationResult } from "@/app/lib/types";
 
 type ExecutiveDashboardProps = {
   result: TranslationResult | null;
+  analysis: AnalysisResult | null;
+  appMode: AppMode;
 };
 
-const ExecutiveDashboard = ({
-  result,
-}: ExecutiveDashboardProps) => {
+const ExecutiveDashboard = ({ result, analysis, appMode }: ExecutiveDashboardProps) => {
+  if (appMode === "analyze" && analysis?.dashboard) {
+    const dashboard = analysis?.dashboard;
+
+    return (
+      <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <DashboardCard
+          label="Ownership Clarity"
+          value={dashboard.ownershipClarity}
+          trend="AI-derived"
+        />
+
+        <DashboardCard
+          label="Decision Status"
+          value={dashboard.decisionStatus}
+          trend="AI-derived"
+        />
+
+        <DashboardCard
+          label="Timeline Risk"
+          value={dashboard.timelineRisk}
+          trend="AI-derived"
+        />
+
+        <DashboardCard
+          label="Meeting Risk"
+          value={dashboard.meetingRisk}
+          trend="AI-derived"
+        />
+      </section>
+    );
+  }
+
   const score = result?.score ?? 0;
   const buzzwordCount = result?.buzzwords?.length ?? 0;
 
@@ -37,7 +69,7 @@ const ExecutiveDashboard = ({
       />
     </section>
   );
-}
+};
 
 type DashboardCardProps = {
   label: string;

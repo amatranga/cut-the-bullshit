@@ -25,10 +25,14 @@ const POST = async (request: Request) => {
     }
 
     const analysis = await analyzeCorporateText(input);
+    const sortedAnalysis: AnalysisResult = {
+      ...analysis,
+      actionItems: sortActionItems(analysis.actionItems ?? []),
+    }
 
     const result: TranslationResult = {
       original: input,
-      analysis,
+      analysis: sortedAnalysis,
     }
 
     return NextResponse.json(result);
@@ -67,5 +71,24 @@ const analyzeCorporateText = async ( input: string ) => {
 
   return JSON.parse(content) as AnalysisResult;
 }
+
+const getActionItemSortScore = (item: AnalysisResult["actionItems"][number]) => {
+  let score = 0;
+
+  if (item.owner) score += 100;
+  if (item.dueDate) score += 50;
+  if (item.status === "explicit") score += 25;
+
+  return score;
+}
+
+const sortActionItems = (
+  actionItems: AnalysisResult["actionItems"],
+): AnalysisResult["actionItems"] => (
+  [...actionItems.sort((a, b) => (
+    getActionItemSortScore(b) - getActionItemSortScore(a)
+  ))]
+);
+
 
 export { POST };

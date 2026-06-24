@@ -29,6 +29,9 @@ const AnalysisResultCard = ({ analysis }: AnalysisResultCardProps) => {
 
     Likely Outcome:
       ${analysis.likelyOutcome}
+
+    Action Items:
+      ${analysis.actionItems.map(actionItem => `- ${actionItem} \n`)}
     `.trim()
   );
 
@@ -75,7 +78,6 @@ const AnalysisResultCard = ({ analysis }: AnalysisResultCardProps) => {
               </ul>
             </div>
           </section>
-
           <section>
             <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
               Risks
@@ -88,13 +90,48 @@ const AnalysisResultCard = ({ analysis }: AnalysisResultCardProps) => {
               </ul>
             </div>
           </section>
+          <section>
+            <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
+              Action Items
+            </p>
+            <div className="rounded-xl bg-slate-950 border border-slate-800 p-4 text-sm leading-relaxed font-medium">
+              {analysis.actionItems.length > 0 ? (
+                <ul className="space-y-3">
+                  {analysis.actionItems.map((item) => (
+                      <li key={item.task} className="space-y-1">
+                        <p className="text-zinc-100">{item.task}</p>
+
+                        <div className="mt-1 flex flex-wrap gap-2 text-xs text-slate-400">
+                          {item.owner ? (
+                            <span>👤 {item.owner}</span>
+                          ) : (
+                            <span>⚠ Owner missing</span>
+                          )}
+
+                          {item.dueDate && (
+                            <span>📅 {item.dueDate}</span>
+                          )}
+
+                          {item.status === "implied" && (
+                            <span>💡 Inferred</span>
+                          )}
+                        </div>
+                      </li>
+                    )
+                  )}
+                </ul>
+              ) : (
+                <p className="text-slate-400">No concrete action items detected.</p>
+              )}
+            </div>
+          </section>
         </div>
-      <CardActionButtons
-        copied={copied}
-        shared={shared}
-        onCopy={handleCopy}
-        onShare={handleShare}
-      />
+        <CardActionButtons
+          copied={copied}
+          shared={shared}
+          onCopy={handleCopy}
+          onShare={handleShare}
+        />
       </ResultCardShell>
     </>
   );

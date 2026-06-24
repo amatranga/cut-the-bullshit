@@ -8,6 +8,8 @@ type ResultCardShellProps = {
   className?: string;
 };
 
+const baseClass = 'rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-2xl transition hover:border-slate-700 hover:bg-slate-900/90';
+
 const ResultCardShell = ({
   title,
   badge,
@@ -16,8 +18,8 @@ const ResultCardShell = ({
   className,
 }: ResultCardShellProps) => {
   const shellClassName = className
-    ? `rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-2xl transition hover:border-slate-700 hover:bg-slate-900/90 ${className}`
-    : "rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-2xl transition hover:border-slate-700 hover:bg-slate-900/90";
+    ? `${baseClass} ${className}`
+    : baseClass;
 
   return (
     <section className={shellClassName}>
@@ -28,7 +30,7 @@ const ResultCardShell = ({
               Executive Translation Output
             </p>
 
-            {badge ? <div className="flex shrink-0 items-center gap-2">{badge}</div> : null}
+            {badge && <div className="flex shrink-0 items-center gap-2">{badge}</div>}
           </div>
 
           <h2 className="text-2xl font-semibold">{title}</h2>

@@ -160,7 +160,21 @@ Return ONLY valid JSON matching this shape:
   "summary": string,
   "actualMeaning": string[],
   "risks": string[],
-  "likelyOutcome": string
+  "likelyOutcome": string,
+  "dashboard": {
+    "ownershipClarity": "Low" | "Medium" | "High",
+    "decisionStatus": "Avoided" | "Pending" | "Clear",
+    "timelineRisk": "Low" | "Medium" | "High",
+    "meetingRisk": "Low" | "Medium" | "High"
+  },
+  "actionItems": [
+    {
+      "task": string,
+      "owner": string | null,
+      "dueDate": string | null,
+      "status": "explicit" | "implied" | "missing-owner"
+    }
+  ]
 }
 
 Summary
@@ -212,6 +226,79 @@ Examples:
 - Timeline slips another sprint.
 - Scope is quietly reduced.
 - Work remains blocked awaiting approval.
+
+Action Items
+Extract work that participants have agreed or are expected to perform.
+There are two types of action items:
+
+1. Explicit
+- Directly stated in the document.
+- Often found under headings such as:
+  - Next Steps
+  - Action Items
+  - Follow Ups
+  - TODO
+- ALWAYS extract these.
+- Preserve the original intent.
+- Minor rewording for clarity is acceptable.
+
+2. Implied
+- Only include when the discussion clearly indicates work that must happen.
+- The work must be strongly supported by the document.
+- Do NOT invent recommendations or "best practices."
+- If there is any doubt, omit the implied action item.
+
+For every action item return:
+
+{
+  "task": string,
+  "owner": string | null,
+  "dueDate": string | null,
+  "source": "explicit" | "implied"
+}
+
+Owner
+- If a specific owner is named, use that name or team.
+- If ownership is unclear, use null.
+- Do NOT guess.
+
+Due Date
+- Use only dates or deadlines explicitly stated.
+- Otherwise use null.
+
+Return an empty array ONLY if the document contains no work to be performed.
+
+Example
+
+Meeting Notes
+
+Next Steps
+- Schedule follow-up meeting.
+- Gather stakeholder feedback.
+- Mike to refine implementation approach by end of week.
+
+Output
+
+[
+  {
+    "task": "Schedule follow-up meeting.",
+    "owner": null,
+    "dueDate": null,
+    "source": "explicit"
+  },
+  {
+    "task": "Gather stakeholder feedback.",
+    "owner": null,
+    "dueDate": null,
+    "source": "explicit"
+  },
+  {
+    "task": "Refine implementation approach",
+    "owner": "Mike",
+    "dueDate": "End of week",
+    "source": "explicit"
+  }
+]
 
 Tone
 - Direct

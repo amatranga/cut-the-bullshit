@@ -4,11 +4,27 @@ type TranslationMode =
   | "executive"
   | "slack-goblin";
 
+type AnalysisDashboard = {
+  ownershipClarity: "Low" | "Medium" | "High";
+  decisionStatus: "Avoided" | "Pending" | "Clear";
+  timelineRisk: "Low" | "Medium" | "High";
+  meetingRisk: "Low" | "Medium" | "High";
+}
+
+type ActionItem = {
+  task: string;
+  owner: string | null;
+  dueDate: string | null;
+  status: "explicit" | "implied";
+}
+
 type AnalysisResult = {
   summary: string;
   actualMeaning: string[];
   risks: string[];
   likelyOutcome: string;
+  dashboard: AnalysisDashboard;
+  actionItems: ActionItem[];
 }
 
 type TranslationResult = {
